@@ -1,0 +1,79 @@
+{% extends 'admin/admin_dashboard.html'%}
+{% block content %}
+<form action="/add_staff" method="POST">
+
+    <div class="row">
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Full Name <span class="text-danger">*</span></label>
+            <input type="text" name="name" class="form-control" placeholder="Enter staff name" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Employee ID <span class="text-danger">*</span></label>
+            <input type="text" name="employee_id" class="form-control" placeholder="EMP001" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" name="email" class="form-control" placeholder="staff@example.com" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Password <span class="text-danger">*</span></label>
+            <input type="password" name="password" class="form-control" placeholder="Create password" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Designation <span class="text-danger">*</span></label>
+            <select name="designation" class="form-select" required>
+                <option value="">Select Designation</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Head Teacher">Head Teacher</option>
+                <option value="Principal">Principal</option>
+                <option value="Vice Principal">Vice Principal</option>
+                <option value="Exam Controller">Exam Controller</option>
+                <option value="Office Staff">Office Staff</option>
+                <option value="Accountant">Accountant</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Subject</label>
+            <select name="subject" class="form-select">
+                <option value="">Select Subject</option>
+                {%for subject in subjects%}
+                <option value="{{subject.id}}">{{subject.name}}({{subject.school_class.name}})</option>
+                {%endfor%}
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" name="phone" class="form-control" placeholder="Enter phone number">
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select">
+                <option value="Active" selected>Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-end mt-4 gap-2">
+        <button type="reset" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-clockwise"></i> Reset
+        </button>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-person-plus-fill"></i> Add Staff
+        </button>
+    </div>
+
+</form>
+
+
+{% endblock %}

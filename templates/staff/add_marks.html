@@ -1,0 +1,161 @@
+{% extends "staff/staff_dashboard.html" %}
+
+{% block title %}Enter Marks{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-pencil-square"></i>
+                Enter Student Marks
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row mb-4">
+
+                <div class="col-md-3">
+                    <strong>Exam :</strong> {{ exam.name }}
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Subject :</strong> {{ exam.subject.name }}
+                </div>
+                
+                <div class="col-md-3">
+                    <strong>Subject :</strong> {{ exam.subject.name }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Subject :</strong> {{ exam.subject.name }}
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Total Marks :</strong> {{ exam.total_marks }}
+                </div>
+
+                <div class="col-md-3">
+                    <strong>Date :</strong> {{ exam.exam_date }}
+                </div>
+
+            </div>
+
+            <form method="POST">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Roll No</th>
+
+                            <th>Student Name</th>
+
+                            <th width="150">
+                                Marks
+                            </th>
+
+                            <th>
+                                Grade
+                            </th>
+
+                            <th>
+                                Remarks
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ student.roll_no }}
+
+                            <input
+                                type="hidden"
+                                name="student_id"
+                                value="{{ student.id }}">
+
+                        </td>
+
+                        <td>
+
+                            {{ student.user.name }}
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="marks"
+                                min="0"
+                                max="{{ exam.total_marks }}"
+                                step="0.5"
+                                required>
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="grade"
+                                placeholder="A+">
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="remarks"
+                                placeholder="Good">
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                <div class="text-end">
+
+                    <button
+                        type="submit"
+                        class="btn btn-success">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        Save Marks
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

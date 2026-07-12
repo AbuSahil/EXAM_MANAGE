@@ -1,0 +1,164 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}Add Exam{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-journal-plus"></i>
+                Create New Exam
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" action="/create_exam">
+
+                <div class="row">
+
+                    <!-- Exam Name -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Exam Name</label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="name"
+                            placeholder="e.g. Unit Test 1"
+                            required>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">Subject</label>
+
+                        <select
+                            class="form-select"
+                            name="subject_id"
+                            required>
+
+                            <option value="">Select Subject</option>
+
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id }}">
+                                {{ subject.name }} ({{ subject.school_class.name }})
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <!-- Exam Date -->
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">Exam Date</label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            name="exam_date"
+                            required>
+
+                    </div>
+
+                    <!-- Total Marks -->
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">Total Marks</label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="total_marks"
+                            min="1"
+                            required>
+
+                    </div>
+
+                    <!-- Pass Marks -->
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">Pass Marks</label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="pass_marks"
+                            min="0"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <!-- Assigned Teacher -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Assigned Staff
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="staff_id"
+                            required>
+
+                            <option value="">Select Staff</option>
+
+                            {% for staff in staffs %}
+                            <option value="{{ staff.id }}">
+                                {{ staff.user.name }}
+                                {% if staff.subject %}
+                                    - {{ staff.subject.name }}
+                                {% endif %}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="text-end">
+
+                    <a href="{{ url_for('create_exam') }}"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        <i class="bi bi-save"></i>
+                        Save Exam
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}Add Subject{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-book-fill"></i>
+                Add New Subject
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" method="POST">
+
+                <div class="mb-3">
+                    <label class="form-label">Subject Name</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="name"
+                        placeholder="Enter Subject Name"
+                        required>
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">Class</label>
+
+                    <select class="form-select" name="class_name" required>
+
+                        <option value="">Select Class</option>
+                        {% for class in classes%}
+                        <option value="{{class.id}}">{{class.name}}({{class.section}})</option>
+                        {%endfor%}
+
+                    </select>
+
+                </div>
+
+                <div class="text-end">
+
+                    
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-save"></i>
+
+                        Save Subject
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="container mt-4">
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">
+                <i class="bi bi-book-fill"></i>
+                Subject Management
+            </h4>
+
+            
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+                            <th>Sl No.</th>
+                            <th>Subject Name</th>
+                            <th>Class</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for subject in subjects %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <strong>{{ subject.name }}</strong>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-info">
+                                    {{ subject.school_class.name }}({{subject.school_class.section }})
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+
+                                <form action="/delete_subject/{{subject.id}}" method="POST" class="d-inline">
+
+                                    
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this subject?')">
+
+                                        <i class="bi bi-trash"></i>
+                                        Delete
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

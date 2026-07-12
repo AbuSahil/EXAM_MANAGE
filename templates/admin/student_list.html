@@ -1,0 +1,116 @@
+{% extends "admin/admin_dashboard.html"%}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h3 class="mb-0">
+        <i class="bi bi-people-fill"></i> Student Management
+    </h3>
+
+    <a href="/add_student" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i>
+        Add New Student
+    </a>
+
+</div>
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <!-- Card Header -->
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+            <h4 class="mb-0">
+                <i class="bi bi-people-fill"></i> Student Management
+            </h4>
+
+            <span class="badge bg-light text-primary fs-6">
+                Total Staff: {{ students|length }}
+            </span>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Phone No</th>
+                            <th>Class</th>
+                            <th>Roll NO</th>
+                            <th>Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for student in students %}
+                        <tr>
+
+                            <td>
+                                <strong>{{ student.id }}</strong>
+                            </td>
+
+                            <td>
+                                {{ student.user.name }}
+                            </td>
+                            <td>
+                                {{ student.phone }}
+                            </td>
+
+                            <td>
+                                {{ student.school_class.name }}
+                                
+                            </td>
+
+                            <td>
+                                {{ student.roll_no }}
+                            </td>
+                            <td>
+                                {{ student.user.is_active }}
+                            </td>
+
+
+                            <td class="text-center">
+
+
+
+                                <!-- Activate Form -->
+                                <form action="/activate_student/{{student.id}}" method="POST" class="d-inline">
+                                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                                    <button type="submit" class="btn btn-success btn-sm me-2">
+                                        <i class="bi bi-check-circle"></i>
+                                        Activate
+                                    </button>
+                                </form>
+
+                                <!-- Deactivate Form -->
+                                <form action="/deactivate_student/{{student.id}}" method="POST" class="d-inline">
+                                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-x-circle"></i>
+                                        Deactivate
+                                    </button>
+                                </form>
+
+
+
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

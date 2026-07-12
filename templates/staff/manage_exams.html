@@ -1,0 +1,28 @@
+{%extends 'staff/staff_dashboard.html'%}
+{%block title %}
+Manage Exam
+{%endblock%}
+
+{% block content %}
+    <table class="table">
+        <thead>
+            <th>Exam Name</th>
+            <th>Subject</th>
+            <th>Class</th>
+            <th>Action</th>
+        </thead>
+{% for exam in exams %}
+<tr>
+    <td>{{ exam.name }}</td>
+    <td>{{ exam.subject.name }}</td>
+    <td>{{exam.subject.school_class.name}}</td>
+    <td>
+        <a href="{{ url_for('add_marks', exam_id=exam.id) }}"
+           class="btn btn-primary">
+            Add Marks
+        </a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
