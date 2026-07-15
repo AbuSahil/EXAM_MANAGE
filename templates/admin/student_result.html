@@ -1,0 +1,143 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}Student Result{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                <i class="bi bi-award-fill"></i>
+                Examination Result
+            </h3>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Student Information -->
+            <div class="row mb-4">
+
+                <div class="col-md-4">
+                    <strong>Name :</strong> {{ student.user.name }}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Roll No :</strong> {{ student.roll_no }}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Class :</strong>
+                    {{ student.school_class.name }} - {{ student.school_class.section }}
+                </div>
+
+            </div>
+
+            <!-- Result Table -->
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+                            <th>#</th>
+                            <th>Exam</th>
+                            <th>Subject</th>
+                            <th>Total</th>
+                            <th>Pass</th>
+                            <th>Obtained</th>
+                            <th>Grade</th>
+                            <th>Remarks</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% set total = namespace(value=0) %}
+                        {% set obtained = namespace(value=0) %}
+
+                        {% for mark in marks %}
+
+                        {% set total.value = total.value + mark.exam.total_marks %}
+                        {% set obtained.value = obtained.value + mark.marks_obtained %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>{{ mark.exam.name }}</td>
+
+                            <td>{{ mark.exam.subject.name }}</td>
+
+                            <td>{{ mark.exam.total_marks }}</td>
+
+                            <td>{{ mark.exam.pass_marks }}</td>
+
+                            <td>{{ mark.marks_obtained }}</td>
+
+                            <td>{{ mark.grade }}</td>
+
+                            <td>{{ mark.remarks }}</td>
+
+                            <td>
+
+                                {% if mark.marks_obtained >= mark.exam.pass_marks %}
+
+                                    <span class="badge bg-success">
+                                        Pass
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+                                        Fail
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                    <tfoot class="table-light">
+
+                        <tr>
+
+                            <th colspan="3" class="text-end">
+                                Grand Total
+                            </th>
+
+                            <th>{{ total.value }}</th>
+
+                            <th></th>
+
+                            <th>{{ obtained.value }}</th>
+
+                            <th colspan="3">
+                                {{ "%.2f"|format((obtained.value / total.value) * 100) }} %
+                            </th>
+
+                        </tr>
+
+                    </tfoot>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

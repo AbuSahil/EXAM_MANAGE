@@ -1,0 +1,88 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}Create Fee Structure{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Create Fee Structure</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <!-- Class -->
+                <div class="mb-3">
+                    <label class="form-label">Class</label>
+
+                    <select class="form-select" name="class_id" required>
+                        <option value="">Select Class</option>
+
+                        {% for cls in classes %}
+                        <option value="{{ cls.id }}">
+                            {{ cls.name }} - {{ cls.section }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Fee Name -->
+                <div class="mb-3">
+                    <label class="form-label">Fee Type</label>
+
+                    <select class="form-select" name="fee_name" required>
+                        <option value="">Select Fee Type</option>
+                        <option value="Admission Fee">Admission Fee</option>
+                        <option value="Monthly Fee">Monthly Fee</option>
+                        <option value="Exam Fee">Exam Fee</option>
+                    </select>
+                </div>
+
+                <!-- Amount -->
+                <div class="mb-3">
+                    <label class="form-label">Amount (₹)</label>
+
+                    <input
+                        type="number"
+                        class="form-control"
+                        name="amount"
+                        min="0"
+                        step="0.01"
+                        required>
+                </div>
+
+                <!-- Monthly -->
+                <div class="form-check mb-3">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="is_monthly"
+                        value="1"
+                        id="monthly">
+
+                    <label class="form-check-label" for="monthly">
+                        This is a Monthly Fee
+                    </label>
+                </div>
+
+                <button class="btn btn-success">
+                    Save Fee Structure
+                </button>
+
+                <a href="#"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

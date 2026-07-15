@@ -1,0 +1,117 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}Subject List{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Heading -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>
+            <i class="bi bi-book-half"></i>
+            Subject List
+        </h3>
+
+        <a href="{{ url_for('add_subject') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>
+            Add Subject
+        </a>
+    </div>
+
+    <!-- Search -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <input
+                type="text"
+                class="form-control"
+                id="searchInput"
+                placeholder="Search subject or class...">
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow border-0">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0" id="subjectTable">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Subject ID</th>
+                            <th>Subject</th>
+                            <th>Class</th>
+                            <th>Section</th>
+                            <th>Assigned Staff</th>
+                           
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for subject in subjects %}
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <strong>{{ subject.name }}</strong>
+                            </td>
+
+                            <td>
+                                {{ subject.school_class.name }}
+                            </td>
+
+                            <td>
+                                {{ subject.school_class.section }}
+                            </td>
+
+                            <td>
+                                {% if subject.staff %}
+                                    {{ subject.staff.user.name }}
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        Not Assigned
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Search Script -->
+<script>
+document.getElementById("searchInput").addEventListener("keyup", function () {
+
+    let filter = this.value.toLowerCase();
+
+    let rows = document.querySelectorAll("#subjectTable tbody tr");
+
+    rows.forEach(function (row) {
+
+        let text = row.innerText.toLowerCase();
+
+        row.style.display = text.includes(filter) ? "" : "none";
+
+    });
+
+});
+</script>
+
+{% endblock %}

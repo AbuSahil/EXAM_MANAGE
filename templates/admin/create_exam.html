@@ -158,7 +158,89 @@
         </div>
 
     </div>
+    <div class="container mt-4">
 
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">
+                <i class="bi bi-journal-text"></i>
+                Exam List
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+                            <th>#</th>
+                            <th>Exam Name</th>
+                            <th>Subject</th>
+                            <th>Class</th>
+                            
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for exam in exams %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <strong>{{ exam.name }}</strong>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-info text-dark">
+                                    {{ exam.subject.name }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ exam.subject.school_class.name }} - {{ exam.subject.school_class.section }}
+                            </td>
+
+                            
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+
+                            <td colspan="5" class="text-center text-muted py-4">
+
+                                <i class="bi bi-inbox fs-3"></i><br>
+
+                                No exams available.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 </div>
 
 {% endblock %}

@@ -1,0 +1,155 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block content %}
+<div class="container-fluid py-3">
+
+<h3 class="mb-3">Fee Report</h3>
+
+<div class="card shadow-sm mb-4">
+<div class="card-body">
+<form method="GET">
+<div class="row g-3">
+<div class="col-md-2">
+<label class="form-label">Class</label>
+<select class="form-select" name="class_id">
+<option value="">All Classes</option>
+{% for c in classes %}
+<option value="{{ c.id }}" {% if request.args.get('class_id')==c.id|string %}selected{% endif %}>{{ c.name }}</option>
+{% endfor %}
+</select>
+</div>
+
+<div class="col-md-2">
+<label class="form-label">Student ID</label>
+<input type="text" class="form-control" name="student_id" value="{{ request.args.get('student_id','') }}">
+</div>
+
+<div class="col-md-3">
+<label class="form-label">Student Name</label>
+<input type="text" class="form-control" name="student_name" value="{{ request.args.get('student_name','') }}">
+</div>
+
+<div class="col-md-2">
+<label class="form-label">Year</label>
+<input type="number" class="form-control" name="year" value="{{ request.args.get('year','') }}">
+</div>
+
+<div class="col-md-2">
+<label class="form-label">Month</label>
+<select class="form-select" name="month">
+<option value="">All</option>
+{% for i in range(1,13) %}
+<option value="{{ i }}" {% if request.args.get('month')==i|string %}selected{% endif %}>{{ i }}</option>
+{% endfor %}
+</select>
+</div>
+
+<div class="col-md-3">
+<label class="form-label">Fee Type</label>
+<select class="form-select" name="fee_type">
+<option value="">All</option>
+{% for ft in fee_types %}
+<option value="{{ ft.id }}">{{ ft.fee_name }}</option>
+{% endfor %}
+</select>
+</div>
+
+<div class="col-md-2">
+<label class="form-label">Payment Mode</label>
+<select class="form-select" name="payment_mode">
+<option value="">All</option>
+<option>Cash</option>
+<option>UPI</option>
+<option>Bank</option>
+<option>Card</option>
+</select>
+</div>
+
+<div class="col-md-2">
+<label class="form-label">From</label>
+<input type="date" class="form-control" name="from_date">
+</div>
+
+<div class="col-md-2">
+<label class="form-label">To</label>
+<input type="date" class="form-control" name="to_date">
+</div>
+
+<div class="col-md-3 d-flex align-items-end gap-2">
+<button class="btn btn-primary">Search</button>
+<a href="{{ url_for('fee_report') }}" class="btn btn-secondary">Reset</a>
+<a href="#" class="btn btn-success">Excel</a>
+<a href="#" class="btn btn-danger">PDF</a>
+<a href="#" class="btn btn-dark" target="_blank">Print</a>
+</div>
+</div>
+</form>
+</div>
+</div>
+
+<div class="row g-3 mb-4">
+<div class="col-md-3"><div class="card bg-primary text-white"><div class="card-body"><h6>Total Collection</h6><h3>₹ {{ total_amount }}</h3></div></div></div>
+<div class="col-md-3"><div class="card bg-warning"><div class="card-body"><h6>Total Discount</h6><h3>₹ {{ total_discount }}</h3></div></div></div>
+<div class="col-md-3"><div class="card bg-danger text-white"><div class="card-body"><h6>Total Fine</h6><h3>₹ {{ total_fine }}</h3></div></div></div>
+<div class="col-md-3"><div class="card bg-success text-white"><div class="card-body"><h6>Total Receipts</h6><h3>{{ fees|length }}</h3></div></div></div>
+</div>
+
+<div class="table-responsive">
+<table class="table table-bordered table-striped table-hover align-middle">
+<thead class="table-dark">
+<tr>
+<th>#</th><th>Receipt</th><th>Date</th><th>Student ID</th><th>Name</th><th>Class</th><th>Fee Type</th><th>Month</th><th>Year</th><th>Amount</th><th>Discount</th><th>Fine</th><th>Net</th><th>Mode</th><th>Action</th>
+</tr>
+</thead>
+<tbody>
+{% for fee in fees %}
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ fee.receipt_no }}</td>
+<td>{{ fee.payment_date.strftime('%d-%m-%Y') }}</td>
+<td>{{ fee.student.id }}</td>
+<td>{{ fee.student.user.name }}</td>
+<td>{{ fee.student.school_class.name }}</td>
+<td>{{ fee.fee_type.fee_name }}</td>
+<td>{{ fee.month }}</td>
+<td>{{ fee.year }}</td>
+<td>₹ {{ "%.2f"|format(fee.amount) }}</td>
+<td>₹ {{ "%.2f"|format(fee.discount) }}</td>
+<td>₹ {{ "%.2f"|format(fee.fine) }}</td>
+<td><strong>₹ {{ "%.2f"|format(fee.amount-fee.discount+fee.fine) }}</strong></td>
+<td>{{ fee.payment_mode }}</td>
+<td>
+<a class="btn btn-sm btn-info" href="#">View</a>
+<a class="btn btn-sm btn-success" href="#">Print</a>
+<a class="btn btn-sm btn-warning" href="#">Edit</a>
+<a class="btn btn-sm btn-danger" href="#" onclick="return confirm('Delete this record?')">Delete</a>
+</td>
+</tr>
+{% else %}
+<tr><td colspan="15" class="text-center">No fee records found.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% if pagination %}
+<nav>
+<ul class="pagination justify-content-center">
+{% if pagination.has_prev %}
+<li class="page-item"><a class="page-link" href="{{ url_for('fee_report', page=pagination.prev_num) }}">Previous</a></li>
+{% endif %}
+{% for p in pagination.iter_pages() %}
+{% if p %}
+<li class="page-item {% if p==pagination.page %}active{% endif %}">
+<a class="page-link" href="{{ url_for('fee_report', page=p) }}">{{ p }}</a>
+</li>
+{% endif %}
+{% endfor %}
+{% if pagination.has_next %}
+<li class="page-item"><a class="page-link" href="{{ url_for('fee_report', page=pagination.next_num) }}">Next</a></li>
+{% endif %}
+</ul>
+</nav>
+{% endif %}
+
+</div>
+{% endblock %}

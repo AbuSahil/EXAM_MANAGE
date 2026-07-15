@@ -1,0 +1,410 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}Collect Fee{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-cash-stack"></i>
+                Collect Fee
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Student Details -->
+            <div class="row mb-4">
+
+                <div class="col-md-3">
+                    <label class="fw-bold">Student ID</label>
+                    <input type="text"
+                           class="form-control"
+                           value="{{ student.id }}"
+                           readonly>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="fw-bold">Roll No</label>
+                    <input type="text"
+                           class="form-control"
+                           value="{{ student.roll_no }}"
+                           readonly>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="fw-bold">Student Name</label>
+                    <input type="text"
+                           class="form-control"
+                           value="{{ student.user.name }}"
+                           readonly>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="fw-bold">Class</label>
+                    <input type="text"
+                           class="form-control"
+                           value="{{ student.school_class.name }}"
+                           readonly>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <form method="POST">
+
+                <div class="row">
+
+                    <!-- Fee Type -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Fee Type
+                        </label>
+
+                        <select class="form-select"
+                                name="fee_type_id"
+                                id="fee_type"
+                                required>
+
+                            <option value="">Select Fee Type</option>
+
+                            {% for fee in fee_types %}
+
+                            <option value="{{ fee.id }}" data-amount="{{ fee.amount }}"
+                                    data-monthly="{{ fee.is_monthly }}">
+
+                                {{ fee.fee_name }} (₹{{ fee.amount }})
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Amount
+                        </label>
+
+                        <input type="text"
+                               id="amount"
+                               
+                               class="form-control"
+                               readonly>
+
+                    </div>
+
+                </div>
+
+                <!-- Exam -->
+
+                <div class="mb-3" id="exam_div" style="display:none;">
+
+                    <label class="form-label fw-semibold">
+                        Select Exam
+                    </label>
+
+                    <select class="form-select"
+                            name="exam_id">
+
+                        <option value="">Select Exam</option>
+
+                        {% for exam in exams %}
+
+                        <option value="{{ exam.id }}">
+                            {{ exam.name }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- Monthly -->
+
+                <div class="row" id="month_div" style="display:none;">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Year
+                        </label>
+
+                        <input type="number"
+                               name="year"
+                               class="form-control"
+                               value="{{ current_year }}">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Month
+                        </label>
+
+                        <select class="form-select"
+                                name="month">
+
+                            <option value="">Select Month</option>
+
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Discount
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               name="discount"
+                               value="0">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Fine
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               name="fine"
+                               value="0">
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Payment Mode
+                        </label>
+
+                        <select class="form-select"
+                                name="payment_mode">
+
+                            <option>Cash</option>
+                            <option>UPI</option>
+                            <option>Bank Transfer</option>
+                            <option>Cheque</option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+                            Receipt No
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="receipt_no"
+                               required>
+
+                    </div> -->
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Remarks
+                    </label>
+
+                    <textarea class="form-control"
+                              rows="3"
+                              name="remarks"></textarea>
+
+                </div>
+
+                <div class="text-end">
+
+                    <a href="{{ url_for('collect_fee') }}"
+                       class="btn btn-secondary">
+
+                        Back
+
+                    </a>
+
+                    <button class="btn btn-success">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        Collect Fee
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<hr class="my-4">
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">
+            Fee Collection History
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th>#</th>
+                        <th>Fee Type</th>
+                        <th>Year</th>
+                        <th>Month</th>
+                        <th>Exam</th>
+                        <th>Amount</th>
+                        <th>Discount</th>
+                        <th>Fine</th>
+                        <th>Paid Amount</th>
+                        <th>Payment Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for fee in fee_history %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ fee.fee_type.fee_name }}</td>
+
+                        <td>{{ fee.year or "-" }}</td>
+
+                        <td>
+                            {% if fee.month %}
+                                {{ ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][fee.month] }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ fee.exam.name if fee.exam else "-" }}
+                        </td>
+
+                        <td>₹{{ fee.amount }}</td>
+
+                        <td>₹{{ fee.discount }}</td>
+
+                        <td>₹{{ fee.fine }}</td>
+
+                        <td>
+                            <strong>
+                                ₹{{ fee.amount - fee.discount + fee.fine }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ fee.payment_date.strftime("%d-%m-%Y") }}
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="10" class="text-center text-muted">
+                            No fee has been collected yet.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const feeType = document.getElementById("fee_type");
+const amount = document.getElementById("amount");
+const monthDiv = document.getElementById("month_div");
+const examDiv = document.getElementById("exam_div");
+
+feeType.addEventListener("change", function () {
+
+    const option = this.options[this.selectedIndex];
+
+    amount.value = option.dataset.amount || "";
+
+    // Show month/year if monthly fee
+    if(option.dataset.monthly === "True"){
+        monthDiv.style.display = "flex";
+    }else{
+        monthDiv.style.display = "none";
+    }
+
+    // Show exam dropdown if Exam Fee
+    if(option.text.includes("Exam")){
+        examDiv.style.display = "block";
+    }else{
+        examDiv.style.display = "none";
+    }
+
+});
+
+</script>
+
+{% endblock %}

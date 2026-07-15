@@ -9,6 +9,7 @@ Manage Exam
             <th>Exam Name</th>
             <th>Subject</th>
             <th>Class</th>
+            <th>Section</th>
             <th>Action</th>
         </thead>
 {% for exam in exams %}
@@ -16,6 +17,7 @@ Manage Exam
     <td>{{ exam.name }}</td>
     <td>{{ exam.subject.name }}</td>
     <td>{{exam.subject.school_class.name}}</td>
+    <td>{{exam.subject.school_class.section}}</td>
     <td>
         <a href="{{ url_for('add_marks', exam_id=exam.id) }}"
            class="btn btn-primary">

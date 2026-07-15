@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Marksheet</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body{
+    background:#ececec;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.marksheet{
+
+    width:210mm;
+    min-height:297mm;
+
+    margin:15px auto;
+
+    background:white;
+
+    padding:15mm;
+
+    border:2px solid #000;
+
+    box-sizing:border-box;
+
+}
+
+.school-name{
+
+    text-align:center;
+
+    font-size:28px;
+
+    font-weight:bold;
+
+}
+
+.exam-title{
+
+    text-align:center;
+
+    font-size:18px;
+
+    margin-bottom:15px;
+
+    border-bottom:2px solid black;
+
+    padding-bottom:8px;
+
+}
+
+.student-info{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-bottom:15px;
+
+}
+
+.student-info td{
+
+    border:1px solid #000;
+
+    padding:8px;
+
+}
+
+.marks-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.marks-table th,
+.marks-table td{
+
+    border:1px solid #000;
+
+    padding:7px;
+
+    text-align:center;
+
+}
+
+.marks-table th{
+
+    background:#efefef;
+
+}
+
+.summary{
+
+    margin-top:15px;
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.summary td{
+
+    border:1px solid #000;
+
+    padding:8px;
+
+}
+
+.signature{
+
+    margin-top:60px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+}
+
+.sign{
+
+    width:180px;
+
+    text-align:center;
+
+}
+
+.sign hr{
+
+    border:1px solid black;
+
+}
+
+@media print{
+
+    body{
+
+        background:white;
+
+    }
+
+    .marksheet{
+
+        margin:0;
+
+        border:none;
+
+        box-shadow:none;
+
+        width:100%;
+
+        min-height:auto;
+
+        padding:5mm;
+
+    }
+
+    @page{
+
+        size:A4 portrait;
+
+        margin:8mm;
+
+    }
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container marksheet">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<div class="school-header">
+
+<h2>ABC HIGH SCHOOL</h2>
+
+<p class="mb-0">
+Examination Marksheet
+</p>
+
+</div>
+
+<div class="info-box">
+
+<div class="row">
+
+<div class="col-md-4">
+<b>Student Name:</b><br>
+Rahul Sharma
+</div>
+
+<div class="col-md-4">
+<b>Roll No:</b><br>
+15
+</div>
+
+<div class="col-md-4">
+<b>Class:</b><br>
+IX - A
+</div>
+
+</div>
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-4">
+<b>Exam:</b><br>
+Half Yearly Examination
+</div>
+
+<div class="col-md-4">
+<b>Academic Session:</b><br>
+2026-27
+</div>
+
+<div class="col-md-4">
+<b>Date:</b><br>
+15 December 2026
+</div>
+
+</div>
+
+</div>
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Sl.</th>
+<th>Subject</th>
+<th>Total Marks</th>
+<th>Pass Marks</th>
+<th>Obtained</th>
+<th>Grade</th>
+<th>Result</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td>English</td>
+<td>100</td>
+<td>30</td>
+<td>86</td>
+<td>A</td>
+<td><span class="badge bg-success">Pass</span></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>Mathematics</td>
+<td>100</td>
+<td>30</td>
+<td>92</td>
+<td>A+</td>
+<td><span class="badge bg-success">Pass</span></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>Science</td>
+<td>100</td>
+<td>30</td>
+<td>88</td>
+<td>A</td>
+<td><span class="badge bg-success">Pass</span></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>Social Science</td>
+<td>100</td>
+<td>30</td>
+<td>81</td>
+<td>B+</td>
+<td><span class="badge bg-success">Pass</span></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>Assamese</td>
+<td>100</td>
+<td>30</td>
+<td>79</td>
+<td>B+</td>
+<td><span class="badge bg-success">Pass</span></td>
+</tr>
+
+</tbody>
+
+<tfoot class="table-light">
+
+<tr>
+
+<th colspan="2">Grand Total</th>
+
+<th>500</th>
+
+<th>-</th>
+
+<th>426</th>
+
+<th colspan="2">
+85.20%
+</th>
+
+</tr>
+
+</tfoot>
+
+</table>
+
+<div class="row mt-4">
+
+<div class="col-md-4">
+
+<div class="alert alert-success text-center">
+
+<h5 class="mb-1">
+Result
+</h5>
+
+<h4 class="mb-0">
+PASS
+</h4>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="alert alert-primary text-center">
+
+<h5 class="mb-1">
+Grade
+</h5>
+
+<h4 class="mb-0">
+A
+</h4>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="alert alert-warning text-center">
+
+<h5 class="mb-1">
+Rank
+</h5>
+
+<h4 class="mb-0">
+5
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer d-flex justify-content-between">
+
+<div class="signature">
+Class Teacher
+</div>
+
+<div class="signature">
+Principal
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

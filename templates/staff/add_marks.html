@@ -26,12 +26,12 @@
                 <div class="col-md-3">
                     <strong>Subject :</strong> {{ exam.subject.name }}
                 </div>
-                
+
                 <div class="col-md-3">
-                    <strong>Subject :</strong> {{ exam.subject.name }}
+                    <strong>Class :</strong> {{ exam.subject.school_class.name }}
                 </div>
                 <div class="col-md-3">
-                    <strong>Subject :</strong> {{ exam.subject.name }}
+                    <strong>Section :</strong> {{ exam.subject.school_class.section }}
                 </div>
 
                 <div class="col-md-3">
@@ -74,63 +74,49 @@
 
                     <tbody>
 
-                    {% for student in students %}
+                        {% for student in students %}
 
-                    <tr>
+                        <tr>
 
-                        <td>
+                            <td>
 
-                            {{ student.roll_no }}
+                                {{ student.roll_no }}
 
-                            <input
-                                type="hidden"
-                                name="student_id"
-                                value="{{ student.id }}">
+                                <input type="hidden" name="student_id" value="{{ student.id }}">
 
-                        </td>
+                            </td>
 
-                        <td>
+                            <td>
 
-                            {{ student.user.name }}
+                                {{ student.user.name }}
 
-                        </td>
+                            </td>
 
-                        <td>
+                            <td>
+                            
+                                {% set mark = marks | selectattr("student_id", "equalto", student.id) | first %}
 
-                            <input
-                                type="number"
-                                class="form-control"
-                                name="marks"
-                                min="0"
-                                max="{{ exam.total_marks }}"
-                                step="0.5"
-                                required>
+                                <input type="number" class="form-control" name="marks" min="0"
+                                    max="{{ exam.total_marks }}" value="{{ mark.marks_obtained if mark else '' }}"
+                                    oninput="if(this.value > this.max) this.value = this.max;" required>
+                            
+                            </td>
 
-                        </td>
+                            <td>
 
-                        <td>
+                                <input type="text" class="form-control" name="grade" placeholder="A+">
 
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="grade"
-                                placeholder="A+">
+                            </td>
 
-                        </td>
+                            <td>
 
-                        <td>
+                                <input type="text" class="form-control" name="remarks" placeholder="Good">
 
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="remarks"
-                                placeholder="Good">
+                            </td>
 
-                        </td>
+                        </tr>
 
-                    </tr>
-
-                    {% endfor %}
+                        {% endfor %}
 
                     </tbody>
 
@@ -138,9 +124,7 @@
 
                 <div class="text-end">
 
-                    <button
-                        type="submit"
-                        class="btn btn-success">
+                    <button type="submit" class="btn btn-success">
 
                         <i class="bi bi-check-circle"></i>
 

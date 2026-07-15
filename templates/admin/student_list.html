@@ -22,7 +22,7 @@
             </h4>
 
             <span class="badge bg-light text-primary fs-6">
-                Total Staff: {{ students|length }}
+                Total Student: {{ students|length }}
             </span>
         </div>
 
@@ -93,6 +93,13 @@
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="bi bi-x-circle"></i>
                                         Deactivate
+                                    </button>
+                                </form>
+                                <form action="/student_result/{{student.id}}" method="POST" class="d-inline">
+                                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="bi bi-check-circle"></i>
+                                        Create Result
                                     </button>
                                 </form>
 

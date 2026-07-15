@@ -1,0 +1,78 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}Create Class{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-building-add"></i>
+                        Create Class
+                    </h4>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST" action="/create_class">
+
+                        <!-- Class Name -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Class Name
+                            </label>
+
+                            <input type="text" class="form-control" name="name" placeholder="Example: Class 1" required>
+                        </div>
+
+                        <!-- Section -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Section
+                            </label>
+
+                            <select class="form-select" name="section" required>
+
+                                <option value="">Select Section</option>
+
+                                <option>A</option>
+                                <option>B</option>
+                                <option>C</option>
+                                <option>D</option>
+                                <option>E</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i>
+                                Save Class
+                            </button>
+
+                            <button type="reset" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-clockwise"></i> Reset
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "staff/staff_dashboard.html" %}
+
+{% block title %}Enter Marks{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="/add_student_bystaff">
+
+    <div class="row">
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Full Name <span class="text-danger">*</span></label>
+            <input type="text" name="name" class="form-control" placeholder="Enter student name" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Roll No<span class="text-danger">*</span></label>
+            <input type="text" name="roll_no" class="form-control" placeholder="10" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" name="email" class="form-control" placeholder="student@example.com" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Password <span class="text-danger">*</span></label>
+            <input type="password" name="password" class="form-control" placeholder="Create password" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Class <span class="text-danger">*</span></label>
+            <select name="class_name" class="form-select" required>
+                <option value="">Select class</option>
+                {%for class in classes%}
+                <option value="{{class.id}}">{{class.name}}-{{class.section}}</option>
+                {%endfor%}
+                
+            </select>
+        </div>
+
+        
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" name="phone" class="form-control" placeholder="Enter phone number">
+        </div>
+
+        
+
+    </div>
+
+    <div class="d-flex justify-content-end mt-4 gap-2">
+        <button type="reset" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-clockwise"></i> Reset
+        </button>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-person-plus-fill"></i> Add Student
+        </button>
+    </div>
+
+</form>
+{% endblock %}
