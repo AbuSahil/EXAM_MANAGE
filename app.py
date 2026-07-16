@@ -13,7 +13,7 @@ def create_app():
     
     app.config['SECRET_KEY'] = 'qwertyuioplkjhgfdsazxcvbnm'
     app.config["SQLALCHEMY_DATABASE_URI"] = \
-    "postgresql://postgres:BJV2026@localhost:5432/school_management"
+    "postgresql://schooladmin:BJV2026@localhost:5432/school_management"
 
     db.init_app(app)
     
