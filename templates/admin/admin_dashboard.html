@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}
-        Exam Management System
+        School Management System
         {% endblock %} </title>
 
     <!-- Bootstrap -->
@@ -178,7 +178,7 @@
 
     <div class="sidebar">
 
-        <h3>Exam Portal</h3>
+        <h3>School Portal</h3>
 
         <a href="/admin" class="active">
             <i class="bi bi-speedometer2"></i>
@@ -190,30 +190,21 @@
             <span>Manage Exams</span>
         </a>
 
-        <a href="/add_subject">
-            <i class="bi bi-book"></i>
-            <span>Subjects</span>
-        </a>
+        
 
-        <a href="/collect_fee"><i class="bi bi-person-workspace"></i><span>Add fee</span></a>
+        <a href="/collect_fee"><i class="bi bi-person-workspace"></i><span>Collect fee</span></a>
 
-        <a href="/student_list">
-            <i class="bi bi-people-fill"></i>
-            <span>Students</span>
-        </a>
+        
 
-        <a href="/marksheet">
-            <i class="bi bi-award"></i>
-            <span>Results</span>
-        </a>
-
-        <a href="/create_fee">
-            <i class="bi bi-bar-chart-line"></i>
-            <span>Create Fee</span>
-        </a>
+        
+        
         <a href="/fee_report">
             <i class="bi bi-bar-chart-line"></i>
             <span>Fee Report</span>
+        </a>
+        <a href="{{ url_for('school_details') }}">
+            <i class="bi bi-gear-fill"></i>
+            <span>School Settings</span>
         </a>
 
         <a href="/logout">
@@ -232,7 +223,7 @@
         <div class="topbar">
 
             <div>
-                <h4>Exam Management System</h4>
+                <h4>School Management System</h4>
                 <small class="text-muted">
                     Welcome to the Administrator Dashboard
                 </small>
@@ -285,7 +276,7 @@
                     <div class="col-md-6 col-lg-3">
                         <a href="{{ url_for('student_list') }}" class="text-decoration-none">
                             <div class="card bg-primary text-white shadow border-0 h-100">
-                               <div class="card-body card dashboard-card bg-primary text-white shadow border-0 h-100">
+                                <div class="card-body card dashboard-card bg-primary text-white shadow border-0 h-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6>Total Students</h6>
@@ -336,7 +327,8 @@
                     <div class="col-md-6 col-lg-3">
                         <a href="/subject_list" class="text-decoration-none">
                             <div class="card bg-danger text-white shadow border-0 h-100">
-                                <div class="card-body card dashboard-card bg-secondary text-white shadow border-0 h-100">
+                                <div
+                                    class="card-body card dashboard-card bg-secondary text-white shadow border-0 h-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6>Total Subjects</h6>
@@ -348,23 +340,7 @@
                             </div>
                         </a>
                     </div>
-                    <!-- Total Exam created -->
-                    <div class="col-md-6 col-lg-3">
-                        <a href="#" class="text-decoration-none">
-                            <div class="card bg-blue text-white shadow border-0 h-100">
-                                <div class="card-body card dashboard-card bg-success text-white shadow border-0 h-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6>Total Exams</h6>
-                                            <h2>{{ total_exams }}</h2>
-                                        </div>
-                                        <i class="bi bi-journal-text fs-1"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
+                    
                 </div>
 
                 <h4 class="mb-4">Quick Actions</h4>

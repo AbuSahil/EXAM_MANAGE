@@ -1,0 +1,30 @@
+{% extends 'admin/admin_dashboard.html' %}
+
+{% block content %}
+    
+
+<form method="POST" enctype="multipart/form-data">
+
+    <label>Select Class</label>
+
+    <select name="class_id" class="form-select mb-3">
+        {% for cls in classes %}
+        <option value="{{ cls.id }}">
+            {{ cls.name }} - {{ cls.section }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <input type="file"
+           name="excel"
+           class="form-control"
+           accept=".xlsx,.xls"
+           required>
+
+    <button class="btn btn-primary mt-3">
+        Upload Students
+    </button>
+
+</form>
+
+{% endblock %}

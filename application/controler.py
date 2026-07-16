@@ -1,5 +1,7 @@
 from flask import Flask, flash , render_template , redirect , request,url_for
 from flask_login import LoginManager , login_required , current_user, logout_user , login_user
+import pandas as pd
+from werkzeug.security import generate_password_hash ,check_password_hash
 
 from sqlalchemy import or_
 # from app import  --> circular import error
@@ -20,30 +22,32 @@ app.app_context().push()
 # def home():
 
 #     return render_template("home.html")
-@app.route("/" , methods=['POST','GET'])
+@app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form['email']
-        password = request.form['password']
-        this_user = User.query.filter_by(email=email).first()
-        if this_user:
-            if this_user.role== 'admin':
-                if this_user.password==password:
-                    login_user(this_user)
-                    return redirect("/admin")
-                return "<h1>Incorect Password</h1>"
-            elif this_user.role == 'staff':
-                if this_user.password ==password:
-                    login_user(this_user)
-                    return redirect("/staff")
-                return "<h1>Incorect Password</h1>"
-            elif this_user.role =='student':
-                if this_user.password == password:
-                    login_user(this_user)
-                    return redirect("/student")
-                return "<h1>Incorect Password</h1>"
+        email = request.form["email"]
+        password = request.form["password"]   # Plain password
 
-        return "<h1> No User Registerd with this Email</h1>"
+        this_user = User.query.filter_by(email=email).first()
+
+        if not this_user:
+            return "<h1>No User Registered with this Email</h1>"
+
+        if check_password_hash(this_user.password, password):
+
+            login_user(this_user)
+
+            if this_user.role == "admin":
+                return redirect("/admin")
+
+            elif this_user.role == "staff":
+                return redirect("/staff")
+
+            elif this_user.role == "student":
+                return redirect("/student")
+        flash("INCORRECT PASSWORD" , 'danger')
+        return redirect(url_for('login'))
+
     return render_template("home.html")
 
 @app.route("/admin")
@@ -72,7 +76,8 @@ def staff():
 @app.route("/student")
 @login_required
 def student():
-    return render_template("student/student_dashboard.html")
+    
+    return render_template("student/student_dashboard.html" , student=current_user,student_id=current_user.student.id)
 
 @app.route("/logout")
 @login_required
@@ -121,7 +126,7 @@ def add_staff():
             return redirect(url_for("add_staff"))
 
         # Create User
-        user = User( role="staff", name=name, email=email, password=password)
+        user = User( role="staff", name=name, email=email, password=generate_password_hash(password))
 
             # Create Staff Profile
         staff = Staff( employee_id=employee_id, designation=designation, subject_id=subject_id , phone=phone )
@@ -197,7 +202,7 @@ def add_student():
             return redirect(url_for("add_student"))
 
         # Create User
-        user = User( role="student", name=name, email=email, password=password)
+        user = User( role="student", name=name, email=email, password=generate_password_hash(password))
 
             # Create Student Profile
         student = Student( roll_no=roll_no, class_id=class_id, phone=phone )
@@ -256,7 +261,7 @@ def add_student_bystaff():
         db.session.commit()
 
         flash("Student added successfully.", "success")
-        return redirect(url_for("student_list"))
+        return redirect(url_for("add_student_bystaff"))
 
         
 
@@ -300,6 +305,10 @@ def create_exam():
     staffs = Staff.query.order_by(Staff.id).all()
 
     if request.method == "POST":
+        existing_exam = Exam.query.filter_by(subject_id=request.form.get("subject_id"),  name=request.form.get("name")).first()
+        if existing_exam:
+                    flash("Exam already created.", "danger")
+                    return redirect(url_for("create_exam"))
 
         exam = Exam(
             name=request.form.get("name"),
@@ -392,7 +401,7 @@ def add_marks(exam_id):
 
         student_ids = request.form.getlist("student_id")
         marks = request.form.getlist("marks")
-        grades = request.form.getlist("grade")
+        
         remarks = request.form.getlist("remarks")
 
         for i in range(len(student_ids)):
@@ -407,7 +416,7 @@ def add_marks(exam_id):
 
             if existing:
                 existing.marks_obtained = float(marks[i])
-                existing.grade = grades[i]
+                
                 existing.remarks = remarks[i]
 
             else:
@@ -415,7 +424,7 @@ def add_marks(exam_id):
                     student_id=student_id,
                     exam_id=exam.id,
                     marks_obtained=float(marks[i]),
-                    grade=grades[i],
+                    
                     remarks=remarks[i]
                 )
 
@@ -428,7 +437,7 @@ def add_marks(exam_id):
         return redirect(url_for("manage_exams"))
     
     marks = Mark.query.filter_by(exam_id=exam.id).all()
-    print(marks)
+   
 
     
     return render_template(
@@ -456,11 +465,6 @@ def student_result(student_id):
         marks=marks
     )
 
-@app.route("/marksheet")
-@login_required
-def marksheet():
-    students=Student.query.all()
-    return render_template("admin/marksheet.html" , students=students)
 
  # FEES MANAGEMENT++++++++++++++++++++++
  # FEES MANAGEMENT++++++++++++++++++++++
@@ -564,7 +568,7 @@ def collect_fee():
     classes = SchoolClass.query.order_by(SchoolClass.name).all()
 
     return render_template(
-        "admin/collect_fee.html",
+        "admin/fees/collect_fee.html",
         students=students,
         classes=classes
     )
@@ -576,7 +580,7 @@ def add_fee(student_id):
     fee_types = FeeType.query.filter_by(
         class_id=student.class_id
     ).all()
-    print(request.form)
+    
     
     exams = (
     Exam.query
@@ -654,7 +658,7 @@ def fee_report():
         query = query.filter(Student.class_id == class_id)
 
     if student_id:
-        query = query.filter(Student.student_id.ilike(f"%{student_id}%"))
+        query = query.filter(Student.id.ilike(f"%{student_id}%"))
 
     if student_name:
         query = query.filter(User.name.ilike(f"%{student_name}%"))
@@ -691,7 +695,7 @@ def fee_report():
     total_fine = sum(f.fine for f in fees)
 
     return render_template(
-        "admin/fee_report.html",
+        "admin/fees/fee_report.html",
         fees=fees,
         pagination=pagination,
         total_amount=total_amount,
@@ -699,4 +703,334 @@ def fee_report():
         total_fine=total_fine,
         classes=SchoolClass.query.all(),
         fee_types=FeeType.query.all()
+    )
+
+
+from werkzeug.utils import secure_filename
+import os
+
+@app.route("/add_school", methods=["GET", "POST"])
+@login_required
+def add_school():
+
+    # Allow only one school record
+    school = School.query.first()
+
+    if school:
+        flash("School details already exist. Please edit them.", "warning")
+        return redirect(url_for("edit_school", id=school.id))
+
+    if request.method == "POST":
+
+        logo = request.files.get("logo")
+        filename = None
+
+        if logo and logo.filename != "":
+            filename = secure_filename(logo.filename)
+
+            upload_folder = os.path.join(
+                app.root_path,
+                "static",
+                "uploads",
+                "school_logo"
+            )
+
+            os.makedirs(upload_folder, exist_ok=True)
+
+            logo.save(os.path.join(upload_folder, filename))
+
+            filename = "uploads/school_logo/" + filename
+
+        school = School(
+
+            name=request.form.get("name"),
+            code=request.form.get("code"),
+            affiliation_no=request.form.get("affiliation_no"),
+            udise_code=request.form.get("udise_code"),
+            address=request.form.get("address"),
+            city=request.form.get("city"),
+            district=request.form.get("district"),
+            state=request.form.get("state"),
+            pin_code=request.form.get("pin_code"),
+            phone=request.form.get("phone"),
+            alternate_phone=request.form.get("alternate_phone"),
+            email=request.form.get("email"),
+            website=request.form.get("website"),
+            principal=request.form.get("principal"),
+            established_year=request.form.get(
+                "established_year",
+                type=int
+            ),
+            board=request.form.get("board"),
+            medium=request.form.get("medium"),
+            currency=request.form.get("currency"),
+            logo=filename
+
+        )
+
+        db.session.add(school)
+        db.session.commit()
+
+        flash("School added successfully.", "success")
+
+        return redirect(url_for("school_details"))
+
+    return render_template("admin/add_school.html")
+
+@app.route("/school_details")
+@login_required
+def school_details():
+
+    school = School.query.first()
+
+    return render_template(
+        "admin/school_details.html",
+        school=school
+    )
+
+
+@app.route("/edit_school/<int:id>", methods=["GET", "POST"])
+@login_required
+def edit_school(id):
+
+    school = School.query.get_or_404(id)
+
+    if request.method == "POST":
+
+        school.name = request.form.get("name")
+        school.code = request.form.get("code")
+        school.affiliation_no = request.form.get("affiliation_no")
+        school.udise_code = request.form.get("udise_code")
+        school.address = request.form.get("address")
+        school.city = request.form.get("city")
+        school.district = request.form.get("district")
+        school.state = request.form.get("state")
+        school.pin_code = request.form.get("pin_code")
+        school.phone = request.form.get("phone")
+        school.alternate_phone = request.form.get("alternate_phone")
+        school.email = request.form.get("email")
+        school.website = request.form.get("website")
+        school.principal = request.form.get("principal")
+        school.established_year = request.form.get(
+            "established_year",
+            type=int
+        )
+        school.board = request.form.get("board")
+        school.medium = request.form.get("medium")
+        school.currency = request.form.get("currency")
+
+        # Upload New Logo
+        logo = request.files.get("logo")
+
+        if logo and logo.filename:
+
+            filename = secure_filename(logo.filename)
+
+            upload_folder = os.path.join(
+                app.root_path,
+                "static",
+                "uploads",
+                "school_logo"
+            )
+
+            os.makedirs(upload_folder, exist_ok=True)
+
+            # Delete old logo
+            if school.logo:
+                old_logo = os.path.join(
+                    app.root_path,
+                    "static",
+                    school.logo
+                )
+
+                if os.path.exists(old_logo):
+                    os.remove(old_logo)
+
+            logo.save(
+                os.path.join(upload_folder, filename)
+            )
+
+            school.logo = "uploads/school_logo/" + filename
+
+        db.session.commit()
+
+        flash("School updated successfully.", "success")
+
+        return redirect(url_for("school_details"))
+
+    return render_template(
+        "admin/edit_school.html",
+        school=school
+    )
+
+@app.route("/student_result_show/<int:student_id>" , methods=['POST','GET'])
+@login_required
+def student_result_show(student_id):
+
+    student = Student.query.get_or_404(student_id)
+
+    marks = (
+        Mark.query
+        .filter_by(student_id=student.id)
+        .join(Exam)
+        .order_by(Exam.exam_date)
+        .all()
+    )
+
+    return render_template(
+        "student/student_result.html",
+        student=student,
+        marks=marks,
+        
+    )
+
+#  bulk result 
+from datetime import datetime
+
+@app.route("/bulk_marksheet/<int:class_id>/<int:exam_id>")
+@login_required
+def bulk_marksheet(class_id, exam_id):
+
+    school = School.query.first()
+    school_class = SchoolClass.query.get_or_404(class_id)
+    selected_exam = Exam.query.get_or_404(exam_id)
+
+    # All subjects of this examination
+    exams = (
+        Exam.query
+        .join(Subject)
+        .filter(
+            Exam.name == selected_exam.name,
+            Subject.class_id == class_id
+        )
+        .order_by(Subject.name)
+        .all()
+    )
+
+    students = (
+        Student.query
+        .filter_by(class_id=class_id)
+        .order_by(Student.roll_no)
+        .all()
+    )
+
+    report_cards = []
+
+    for student in students:
+
+        student_marks = []
+        total = 0
+        obtained = 0
+
+        for subject_exam in exams:
+
+            mark = Mark.query.filter_by(
+                student_id=student.id,
+                exam_id=subject_exam.id
+            ).first()
+
+            total += subject_exam.total_marks
+
+            marks_obtained = 0
+
+            if mark:
+                marks_obtained = mark.marks_obtained
+                obtained += mark.marks_obtained
+
+            student_marks.append({
+                "exam": subject_exam,
+                "mark": mark,
+                "marks": marks_obtained
+            })
+
+        percentage = round((obtained / total) * 100, 2) if total else 0
+
+        report_cards.append({
+            "student": student,
+            "marks": student_marks,
+            "total": total,
+            "obtained": obtained,
+            "percentage": percentage
+        })
+
+    # -------------------------
+    # Calculate Rank
+    # -------------------------
+
+    report_cards.sort(
+        key=lambda x: x["obtained"],
+        reverse=True
+    )
+
+    rank = 1
+
+    for i, card in enumerate(report_cards):
+
+        if i > 0 and card["obtained"] < report_cards[i-1]["obtained"]:
+            rank = i + 1
+
+        card["rank"] = rank
+
+    # Optional: sort back by roll number for printing
+    report_cards.sort(
+        key=lambda x: x["student"].roll_no
+    )
+
+    return render_template(
+        "admin/bulk_result.html",
+        school=school,
+        school_class=school_class,
+        exam_name=selected_exam.name,
+        report_cards=report_cards,
+        exam=selected_exam,
+        current_year=datetime.now().year
+    )
+
+
+
+
+@app.route("/import_students", methods=["GET", "POST"])
+@login_required
+def import_students():
+
+    classes = SchoolClass.query.all()
+
+    if request.method == "POST":
+
+        class_id = request.form.get("class_id")
+
+        file = request.files["excel"]
+
+        df = pd.read_excel(file)
+
+        for _, row in df.iterrows():
+
+            user = User(
+                role="student",
+                name=row["Name"],
+                email=row["Email"],
+                password=generate_password_hash(str(row["Password"]))
+            )
+
+            db.session.add(user)
+            db.session.flush()
+
+            student = Student(
+                user_id=user.id,
+                class_id=class_id,
+                roll_no=int(row["Roll No"]),
+                phone=str(row["Phone"])
+            )
+
+            db.session.add(student)
+
+        db.session.commit()
+
+        flash("Students imported successfully.", "success")
+
+        return redirect(url_for("student_list"))
+
+    return render_template(
+        "admin/bulk_add_student.html",
+        classes=classes
     )

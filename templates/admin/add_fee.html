@@ -119,7 +119,7 @@
 
                         <option value="">Select Exam</option>
 
-                        {% for exam in exams %}
+                       {% for exam in exams | unique(attribute='name') %}
 
                         <option value="{{ exam.id }}">
                             {{ exam.name }}
@@ -228,18 +228,7 @@
 
                     </div>
 
-                    <!-- <div class="col-md-6 mb-3">
-
-                        <label class="form-label fw-semibold">
-                            Receipt No
-                        </label>
-
-                        <input type="text"
-                               class="form-control"
-                               name="receipt_no"
-                               required>
-
-                    </div> -->
+                   
 
                 </div>
 

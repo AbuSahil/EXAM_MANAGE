@@ -4,6 +4,7 @@
 
 {% block content %}
 
+
 <div class="container mt-4">
 
     <div class="card shadow border-0 rounded-4">
@@ -25,12 +26,7 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Exam Name</label>
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            name="name"
-                            placeholder="e.g. Unit Test 1"
-                            required>
+                        <input type="text" class="form-control" name="name" placeholder="e.g. Unit Test 1" required>
                     </div>
 
                     <!-- Subject -->
@@ -38,10 +34,7 @@
 
                         <label class="form-label">Subject</label>
 
-                        <select
-                            class="form-select"
-                            name="subject_id"
-                            required>
+                        <select class="form-select" name="subject_id" required>
 
                             <option value="">Select Subject</option>
 
@@ -64,11 +57,7 @@
 
                         <label class="form-label">Exam Date</label>
 
-                        <input
-                            type="date"
-                            class="form-control"
-                            name="exam_date"
-                            required>
+                        <input type="date" class="form-control" name="exam_date" required>
 
                     </div>
 
@@ -77,12 +66,7 @@
 
                         <label class="form-label">Total Marks</label>
 
-                        <input
-                            type="number"
-                            class="form-control"
-                            name="total_marks"
-                            min="1"
-                            required>
+                        <input type="number" class="form-control" name="total_marks" min="1" required>
 
                     </div>
 
@@ -91,12 +75,7 @@
 
                         <label class="form-label">Pass Marks</label>
 
-                        <input
-                            type="number"
-                            class="form-control"
-                            name="pass_marks"
-                            min="0"
-                            required>
+                        <input type="number" class="form-control" name="pass_marks" min="0" required>
 
                     </div>
 
@@ -111,10 +90,7 @@
                             Assigned Staff
                         </label>
 
-                        <select
-                            class="form-select"
-                            name="staff_id"
-                            required>
+                        <select class="form-select" name="staff_id" required>
 
                             <option value="">Select Staff</option>
 
@@ -122,7 +98,7 @@
                             <option value="{{ staff.id }}">
                                 {{ staff.user.name }}
                                 {% if staff.subject %}
-                                    - {{ staff.subject.name }}
+                                - {{ staff.subject.name }}
                                 {% endif %}
                             </option>
                             {% endfor %}
@@ -135,16 +111,13 @@
 
                 <div class="text-end">
 
-                    <a href="{{ url_for('create_exam') }}"
-                       class="btn btn-secondary">
+                    <a href="{{ url_for('create_exam') }}" class="btn btn-secondary">
 
                         Cancel
 
                     </a>
 
-                    <button
-                        type="submit"
-                        class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary">
 
                         <i class="bi bi-save"></i>
                         Save Exam
@@ -160,87 +133,99 @@
     </div>
     <div class="container mt-4">
 
-    <div class="card shadow border-0 rounded-4">
+        <div class="card shadow border-0 rounded-4">
 
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
-            <h4 class="mb-0">
-                <i class="bi bi-journal-text"></i>
-                Exam List
-            </h4>
+                <h4 class="mb-0">
+                    <i class="bi bi-journal-text"></i>
+                    Exam List
+                </h4>
 
-        </div>
+            </div>
 
-        <div class="card-body">
+            <div class="card-body">
 
-            <div class="table-responsive">
+                <div class="table-responsive">
 
-                <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle">
 
-                    <thead class="table-dark">
+                        <thead class="table-dark">
 
-                        <tr>
-                            <th>#</th>
-                            <th>Exam Name</th>
-                            <th>Subject</th>
-                            <th>Class</th>
-                            
-                        </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Exam Name</th>
+                                <th>Subject</th>
+                                <th>Class</th>
+                                <th>Action</th>
 
-                    </thead>
+                            </tr>
 
-                    <tbody>
+                        </thead>
 
-                        {% for exam in exams %}
+                        <tbody>
 
-                        <tr>
+                            {% for exam in exams %}
 
-                            <td>{{ loop.index }}</td>
+                            <tr>
 
-                            <td>
-                                <strong>{{ exam.name }}</strong>
-                            </td>
+                                <td>{{ loop.index }}</td>
 
-                            <td>
-                                <span class="badge bg-info text-dark">
-                                    {{ exam.subject.name }}
-                                </span>
-                            </td>
+                                <td>
+                                    <strong>{{ exam.name }}</strong>
+                                </td>
 
-                            <td>
-                                {{ exam.subject.school_class.name }} - {{ exam.subject.school_class.section }}
-                            </td>
+                                <td>
+                                    <span class="badge bg-info text-dark">
+                                        {{ exam.subject.name }}
+                                    </span>
+                                </td>
 
-                            
-                        </tr>
+                                <td>
+                                    {{ exam.subject.school_class.name }} - {{ exam.subject.school_class.section }}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('bulk_marksheet',
+        class_id=exam.subject.school_class.id,
+        exam_id=exam.id) }}" class="btn btn-success">
 
-                        {% else %}
+                                        <i class="bi bi-printer"></i>
 
-                        <tr>
+                                        Print All Marksheets
 
-                            <td colspan="5" class="text-center text-muted py-4">
+                                    </a>
+                                </td>
 
-                                <i class="bi bi-inbox fs-3"></i><br>
 
-                                No exams available.
+                            </tr>
 
-                            </td>
+                            {% else %}
 
-                        </tr>
+                            <tr>
 
-                        {% endfor %}
+                                <td colspan="5" class="text-center text-muted py-4">
 
-                    </tbody>
+                                    <i class="bi bi-inbox fs-3"></i><br>
 
-                </table>
+                                    No exams available.
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 
         </div>
 
     </div>
-
-</div>
 </div>
 
 {% endblock %}

@@ -1,0 +1,277 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">
+                <i class="bi bi-pencil-square"></i>
+                Edit School
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="row">
+
+                    <div class="col-md-3 text-center mb-4">
+
+                        {% if school.logo %}
+                        <img src="{{ url_for('static', filename=school.logo) }}"
+                             class="img-fluid rounded shadow mb-3"
+                             style="max-height:180px;">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/no_logo.png') }}"
+                             class="img-fluid rounded shadow mb-3"
+                             style="max-height:180px;">
+                        {% endif %}
+
+                        <label class="form-label">Change Logo</label>
+
+                        <input
+                            type="file"
+                            name="logo"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="col-md-9">
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label>School Name</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    class="form-control"
+                                    value="{{ school.name }}"
+                                    required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>School Code</label>
+                                <input
+                                    type="text"
+                                    name="code"
+                                    class="form-control"
+                                    value="{{ school.code }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Affiliation No.</label>
+                                <input
+                                    type="text"
+                                    name="affiliation_no"
+                                    class="form-control"
+                                    value="{{ school.affiliation_no }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>UDISE Code</label>
+                                <input
+                                    type="text"
+                                    name="udise_code"
+                                    class="form-control"
+                                    value="{{ school.udise_code }}">
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label>Address</label>
+                                <textarea
+                                    name="address"
+                                    rows="3"
+                                    class="form-control">{{ school.address }}</textarea>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>City</label>
+                                <input
+                                    type="text"
+                                    name="city"
+                                    class="form-control"
+                                    value="{{ school.city }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>District</label>
+                                <input
+                                    type="text"
+                                    name="district"
+                                    class="form-control"
+                                    value="{{ school.district }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>State</label>
+                                <input
+                                    type="text"
+                                    name="state"
+                                    class="form-control"
+                                    value="{{ school.state }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>PIN Code</label>
+                                <input
+                                    type="text"
+                                    name="pin_code"
+                                    class="form-control"
+                                    value="{{ school.pin_code }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>Phone</label>
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    class="form-control"
+                                    value="{{ school.phone }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>Alternate Phone</label>
+                                <input
+                                    type="text"
+                                    name="alternate_phone"
+                                    class="form-control"
+                                    value="{{ school.alternate_phone }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    class="form-control"
+                                    value="{{ school.email }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Website</label>
+                                <input
+                                    type="url"
+                                    name="website"
+                                    class="form-control"
+                                    value="{{ school.website }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Principal</label>
+                                <input
+                                    type="text"
+                                    name="principal"
+                                    class="form-control"
+                                    value="{{ school.principal }}">
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label>Established Year</label>
+                                <input
+                                    type="number"
+                                    name="established_year"
+                                    class="form-control"
+                                    value="{{ school.established_year }}">
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label>Board</label>
+
+                                <select
+                                    name="board"
+                                    class="form-select">
+
+                                    <option value="SEBA"
+                                        {% if school.board=="SEBA" %}selected{% endif %}>
+                                        SEBA
+                                    </option>
+
+                                    <option value="CBSE"
+                                        {% if school.board=="CBSE" %}selected{% endif %}>
+                                        CBSE
+                                    </option>
+
+                                    <option value="ICSE"
+                                        {% if school.board=="ICSE" %}selected{% endif %}>
+                                        ICSE
+                                    </option>
+
+                                    <option value="ASSEB(DIV-I)"
+                                        {% if school.board=="ASSEB(DIV-I)" %}selected{% endif %}>
+                                         ASSEB(DIV-I)
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Medium</label>
+
+                                <select
+                                    name="medium"
+                                    class="form-select">
+
+                                    <option value="English"
+                                        {% if school.medium=="English" %}selected{% endif %}>
+                                        English
+                                    </option>
+
+                                    <option value="Assamese"
+                                        {% if school.medium=="Assamese" %}selected{% endif %}>
+                                        Assamese
+                                    </option>
+
+                                    <option value="Hindi"
+                                        {% if school.medium=="Hindi" %}selected{% endif %}>
+                                        Hindi
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Currency</label>
+
+                                <input
+                                    type="text"
+                                    name="currency"
+                                    class="form-control"
+                                    value="{{ school.currency }}">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <button class="btn btn-success">
+                    <i class="bi bi-save"></i>
+                    Update School
+                </button>
+
+                <a href="{{ url_for('school_details') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

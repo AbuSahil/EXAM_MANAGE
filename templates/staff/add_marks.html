@@ -60,9 +60,7 @@
                                 Marks
                             </th>
 
-                            <th>
-                                Grade
-                            </th>
+                            
 
                             <th>
                                 Remarks
@@ -102,15 +100,11 @@
                             
                             </td>
 
-                            <td>
-
-                                <input type="text" class="form-control" name="grade" placeholder="A+">
-
-                            </td>
+                            
 
                             <td>
 
-                                <input type="text" class="form-control" name="remarks" placeholder="Good">
+                                <input type="text" class="form-control" name="remarks" value="{{ mark.remarks if mark else '' }}">
 
                             </td>
 
@@ -131,10 +125,18 @@
                         Save Marks
 
                     </button>
-
+                    
                 </div>
 
             </form>
+            <a href="/manage_exams"><button class="btn btn-primary btn-login">
+
+                        <i class="bi bi-box-arrow-in-left"></i>
+
+                        Back
+
+                    </button></a>
+
 
         </div>
 

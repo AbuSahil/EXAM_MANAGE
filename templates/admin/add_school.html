@@ -1,0 +1,227 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-building"></i>
+                Add School
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">School Name</label>
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            placeholder="Enter School Name"
+                            required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">School Code</label>
+                        <input
+                            type="text"
+                            name="code"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Affiliation No</label>
+                        <input
+                            type="text"
+                            name="affiliation_no"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">UDISE Code</label>
+                        <input
+                            type="text"
+                            name="udise_code"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Address</label>
+                        <textarea
+                            name="address"
+                            rows="3"
+                            class="form-control"></textarea>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">City</label>
+                        <input
+                            type="text"
+                            name="city"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">District</label>
+                        <input
+                            type="text"
+                            name="district"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">State</label>
+                        <input
+                            type="text"
+                            name="state"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">PIN Code</label>
+                        <input
+                            type="text"
+                            name="pin_code"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Phone</label>
+                        <input
+                            type="text"
+                            name="phone"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Alternate Phone</label>
+                        <input
+                            type="text"
+                            name="alternate_phone"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Website</label>
+                        <input
+                            type="url"
+                            name="website"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Principal Name</label>
+                        <input
+                            type="text"
+                            name="principal"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Established Year</label>
+                        <input
+                            type="number"
+                            name="established_year"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Medium</label>
+                        <select
+                            name="medium"
+                            class="form-select">
+
+                            <option value="">Select</option>
+                            <option>English</option>
+                            <option>Assamese</option>
+                            <option>Hindi</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Board</label>
+
+                        <select
+                            name="board"
+                            class="form-select">
+
+                            <option value="">Select</option>
+
+                            <option>ASSEB(DIV-I)</option>
+                            <option>CBSE</option>
+                            <option>ICSE</option>
+                            <option>State Board</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Currency</label>
+
+                        <input
+                            type="text"
+                            name="currency"
+                            value="₹"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">School Logo</label>
+
+                        <input
+                            type="file"
+                            name="logo"
+                            class="form-control">
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <button
+                    class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Save School
+
+                </button>
+
+                <a
+                    href="{{ url_for('admin') }}"
+                    class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
