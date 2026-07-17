@@ -141,8 +141,9 @@ def add_staff():
             # Link Staff with User
         staff.user = user
 
-        db.session.add(staff)
+        
         try:
+            db.session.add(staff)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
@@ -232,8 +233,8 @@ def add_student():
             # Link Staff with User
         student.user = user
 
-        db.session.add(student)
         try:
+            db.session.add(student)
             db.session.commit()
             flash("Student added successfully.", "success")
             return redirect(url_for("student_list"))
@@ -283,8 +284,8 @@ def add_student_bystaff():
             # Link Staff with User
         student.user = user
 
-        db.session.add(student)
         try:
+            db.session.add(student)
             db.session.commit()
 
             flash("Student added successfully.", "success")
@@ -362,8 +363,8 @@ def create_exam():
             staff_id=request.form.get("staff_id")
         )
 
-        db.session.add(exam)
         try:
+            db.session.add(exam)
             db.session.commit()
 
             flash("Exam created successfully.", "success")
@@ -406,8 +407,8 @@ def add_subject():
             class_id=class_id
         )
 
-        db.session.add(subject)
         try:
+            db.session.add(subject)
             db.session.commit()
 
             flash("Subject added successfully.", "success")
@@ -425,8 +426,8 @@ def delete_subject(subject_id):
 
     subject = Subject.query.get_or_404(subject_id)
 
-    db.session.delete(subject)
     try:
+        db.session.delete(subject)
         db.session.commit()
 
         flash("Subject deleted successfully.", "success")
@@ -448,9 +449,6 @@ def manage_exams():
 @login_required
 def add_marks(exam_id):
     exam = Exam.query.get_or_404(exam_id)
-    
-
-
     students = Student.query.filter_by(class_id=exam.subject.class_id).order_by(Student.roll_no).all()
     if request.method == "POST":
 
@@ -483,9 +481,9 @@ def add_marks(exam_id):
                     remarks=remarks[i]
                 )
 
-                db.session.add(mark)
 
         try:
+            db.session.add(mark)
             db.session.commit()
 
             flash("Marks saved successfully.", "success")
@@ -551,8 +549,8 @@ def create_class():
             section=section
         )
 
-        db.session.add(school_class)
         try:
+            db.session.add(school_class)
             db.session.commit()
             flash("Class created successfully.", "success")
             return redirect(url_for("create_class"))
@@ -582,8 +580,8 @@ def create_fee():
             is_monthly="is_monthly" in request.form
         )
 
-        db.session.add(fee)
         try:
+            db.session.add(fee)
             db.session.commit()
 
             flash("Fee created successfully.", "success")
@@ -682,10 +680,10 @@ def add_fee(student_id):
             remarks=request.form.get("remarks")
         )
 
-        db.session.add(fee)
-        db.session.flush()
-        fee.receipt_no = f"RCPT2026{fee.id:06d}"
         try:
+            db.session.add(fee)
+            db.session.flush()
+            fee.receipt_no = f"RCPT2026{fee.id:06d}"
             db.session.commit()
 
             flash("Fee collected successfully.", "success")
@@ -841,8 +839,8 @@ def add_school():
 
         )
 
-        db.session.add(school)
         try:
+            db.session.add(school)
             db.session.commit()
 
             flash("School added successfully.", "success")
@@ -1105,9 +1103,9 @@ def import_students():
                 phone=str(row["Phone"])
             )
 
-            db.session.add(student)
 
         try:
+            db.session.add(student)
             db.session.commit()
 
             flash("Students imported successfully.", "success")
