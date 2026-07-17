@@ -492,67 +492,72 @@ def manage_exams():
     exams = Exam.query.filter_by(staff_id=staff_id).all()
     return render_template("staff/manage_exams.html", exams=exams , staff=current_user)
 
-@app.route("/add_marks/<int:exam_id>" , methods=['POST','GET'])
+@app.route("/add_marks/<int:exam_id>", methods=["GET", "POST"])
 @login_required
 def add_marks(exam_id):
+
     if current_user.role != "staff":
-            flash("Only Staff can access this page.", "danger")
-            return redirect(url_for("login"))
+        flash("Only Staff can access this page.", "danger")
+        return redirect(url_for("login"))
+
     exam = Exam.query.get_or_404(exam_id)
-    students = Student.query.filter_by(class_id=exam.subject.class_id).order_by(Student.roll_no).all()
+
+    students = Student.query.filter_by(
+        class_id=exam.subject.class_id
+    ).order_by(Student.roll_no).all()
+
     if request.method == "POST":
 
         student_ids = request.form.getlist("student_id")
         marks = request.form.getlist("marks")
-        
         remarks = request.form.getlist("remarks")
 
-        for i in range(len(student_ids)):
+        try:
 
-            student_id = int(student_ids[i])
+            for i in range(len(student_ids)):
 
-            # Prevent duplicate entries
-            existing = Mark.query.filter_by(
-                student_id=student_id,
-                exam_id=exam.id
-            ).first()
+                student_id = int(student_ids[i])
 
-            if existing:
-                existing.marks_obtained = float(marks[i])
-                
-                existing.remarks = remarks[i]
+                mark_value = float(marks[i]) if marks[i] else 0
 
-            else:
-                mark = Mark(
+                existing = Mark.query.filter_by(
                     student_id=student_id,
-                    exam_id=exam.id,
-                    marks_obtained=float(marks[i]),
-                    
-                    remarks=remarks[i]
-                )
+                    exam_id=exam.id
+                ).first()
 
+                if existing:
+                    existing.marks_obtained = mark_value
+                    existing.remarks = remarks[i]
 
-            try:
-                db.session.add(mark)
-                db.session.commit()
+                else:
+                    mark = Mark(
+                        student_id=student_id,
+                        exam_id=exam.id,
+                        marks_obtained=mark_value,
+                        remarks=remarks[i]
+                    )
 
-                flash("Marks saved successfully.", "success")
+                    db.session.add(mark)
 
-                return redirect(url_for("manage_exams"))
-            except Exception as e:
-                db.session.rollback()
-                app.logger.error(e)
-                flash("Unable to save staff details. Please check the entered data.", "danger")        
-    
+            db.session.commit()
+
+            flash("Marks saved successfully.", "success")
+            return redirect(url_for("manage_exams"))
+
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save marks. Please check the entered data.", "danger")
+
     marks = Mark.query.filter_by(exam_id=exam.id).all()
-   
 
-    
     return render_template(
-    "staff/add_marks.html",
-    exam=exam,
-    students=students,
-    staff=current_user, marks = marks)
+        "staff/add_marks.html",
+        exam=exam,
+        students=students,
+        staff=current_user,
+        marks=marks
+    )
 @app.route("/student_result/<int:student_id>" , methods=['POST','GET'])
 @login_required
 def student_result(student_id):
