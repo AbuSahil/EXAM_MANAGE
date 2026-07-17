@@ -532,17 +532,17 @@ def add_marks(exam_id):
                 )
 
 
-        try:
-            db.session.add(mark)
-            db.session.commit()
+            try:
+                db.session.add(mark)
+                db.session.commit()
 
-            flash("Marks saved successfully.", "success")
+                flash("Marks saved successfully.", "success")
 
-            return redirect(url_for("manage_exams"))
-        except Exception as e:
-            db.session.rollback()
-            app.logger.error(e)
-            flash("Unable to save staff details. Please check the entered data.", "danger")        
+                return redirect(url_for("manage_exams"))
+            except Exception as e:
+                db.session.rollback()
+                app.logger.error(e)
+                flash("Unable to save staff details. Please check the entered data.", "danger")        
     
     marks = Mark.query.filter_by(exam_id=exam.id).all()
    
