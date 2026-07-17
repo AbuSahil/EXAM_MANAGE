@@ -60,6 +60,10 @@ def login():
 @app.route("/admin")
 @login_required
 def admin():
+    if current_user.role != "admin":
+        flash("Only Admin can access this page.", "danger")
+        return redirect(url_for("login"))
+
 
     total_students = Student.query.count()
     total_staff = Staff.query.count()
@@ -78,12 +82,17 @@ def admin():
 @app.route("/staff")
 @login_required
 def staff():
+    if current_user.role != "staff":
+        flash("Only Staff can access this page.", "danger")
+        return redirect(url_for("login"))
 
     return render_template("staff/staff_dashboard.html" , staff=current_user)
 @app.route("/student")
 @login_required
 def student():
-    
+    if current_user.role != "student":
+        flash("Only Student can access this page.", "danger")
+        return redirect(url_for("login"))
     return render_template("student/student_dashboard.html" , student=current_user,student_id=current_user.student.id)
 
 @app.route("/logout")
@@ -106,6 +115,9 @@ def retrieve_password():
 @app.route("/add_staff", methods=["GET", "POST"])
 @login_required
 def add_staff():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
     subjects = Subject.query.all()
 
     if request.method == "POST":
@@ -158,11 +170,17 @@ def add_staff():
 @app.route("/staff_list")
 @login_required
 def staff_list():
+    if current_user.role != "admin":
+        flash("Only Admin can access this page.", "danger")
+        return redirect(url_for("login"))
     staffs=Staff.query.all()
 
     return render_template("admin/staff_list.html" , staffs=staffs)
 @app.route("/activate_staff/<int:staff_id>", methods=["POST"])
 def activate_staff(staff_id):
+    if current_user.role != "admin":
+        flash("Only Admin can access this page.", "danger")
+        return redirect(url_for("login"))
     
 
     staff = Staff.query.get(staff_id)
@@ -180,6 +198,9 @@ def activate_staff(staff_id):
     return redirect(url_for("staff_list"))
 @app.route("/deactivate_staff/<int:staff_id>", methods=["POST"])
 def deactivate_staff(staff_id):
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
     
 
     staff = Staff.query.get(staff_id)
@@ -198,6 +219,9 @@ def deactivate_staff(staff_id):
 @app.route("/add_student", methods=["GET", "POST"])
 @login_required
 def add_student():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
     classes=SchoolClass.query.all()
 
     if request.method == "POST":
@@ -306,13 +330,18 @@ def add_student_bystaff():
 @app.route("/student_list")
 @login_required
 def student_list():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
     students=Student.query.all()
 
     return render_template("admin/student_list.html" , students=students)
 @app.route("/activate_student/<int:student_id>", methods=["POST"])
 def activate_student(student_id):
     
-
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
     student = Student.query.get(student_id)
     if student:
         student.user.is_active = True
@@ -326,7 +355,9 @@ def activate_student(student_id):
     return redirect(url_for("student_list"))
 @app.route("/deactivate_student/<int:student_id>", methods=["POST"])
 def deactivate_student(student_id):
-    
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     student = Student.query.get(student_id)
     if student:
@@ -464,6 +495,9 @@ def manage_exams():
 @app.route("/add_marks/<int:exam_id>" , methods=['POST','GET'])
 @login_required
 def add_marks(exam_id):
+    if current_user.role != "staff":
+            flash("Only Staff can access this page.", "danger")
+            return redirect(url_for("login"))
     exam = Exam.query.get_or_404(exam_id)
     students = Student.query.filter_by(class_id=exam.subject.class_id).order_by(Student.roll_no).all()
     if request.method == "POST":
@@ -545,6 +579,9 @@ def student_result(student_id):
 @app.route("/create_class", methods=["GET", "POST"])
 @login_required
 def create_class():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     if request.method == "POST":
 
@@ -580,6 +617,9 @@ def create_class():
 @app.route("/create_fee", methods=["GET", "POST"])
 @login_required
 def create_fee():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
     classes = SchoolClass.query.order_by(SchoolClass.name,SchoolClass.section).all()
     if request.method == "POST":
         class_id=request.form["class_id"]
@@ -613,6 +653,9 @@ def create_fee():
 @app.route("/subject_list")
 @login_required
 def subject_list():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     subjects = Subject.query.order_by(Subject.name).all()
 
@@ -624,6 +667,9 @@ def subject_list():
 @app.route("/collect_fee", methods=["GET", "POST"])
 @login_required
 def collect_fee():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     students = []
 
@@ -659,6 +705,9 @@ def collect_fee():
 @app.route("/add_fee/<int:student_id>", methods=["GET", "POST"])
 @login_required
 def add_fee(student_id):
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
     student = Student.query.get_or_404(student_id)
     fee_types = FeeType.query.filter_by(
         class_id=student.class_id
@@ -722,6 +771,9 @@ from datetime import datetime
 @app.route("/fee_report")
 @login_required
 def fee_report():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     page = request.args.get("page", 1, type=int)
 
@@ -799,6 +851,9 @@ import os
 @app.route("/add_school", methods=["GET", "POST"])
 @login_required
 def add_school():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     # Allow only one school record
     school = School.query.first()
@@ -872,6 +927,9 @@ def add_school():
 @app.route("/school_details")
 @login_required
 def school_details():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     school = School.query.first()
 
@@ -884,6 +942,9 @@ def school_details():
 @app.route("/edit_school/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_school(id):
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     school = School.query.get_or_404(id)
 
@@ -963,6 +1024,9 @@ def edit_school(id):
 @app.route("/student_result_show/<int:student_id>" , methods=['POST','GET'])
 @login_required
 def student_result_show(student_id):
+    if current_user.role != "student":
+            flash("Only Student can access this page.", "danger")
+            return redirect(url_for("login"))
 
     student = Student.query.get_or_404(student_id)
 
@@ -987,6 +1051,9 @@ from datetime import datetime
 @app.route("/bulk_marksheet/<int:class_id>/<int:exam_id>")
 @login_required
 def bulk_marksheet(class_id, exam_id):
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     school = School.query.first()
     school_class = SchoolClass.query.get_or_404(class_id)
@@ -1089,6 +1156,9 @@ def bulk_marksheet(class_id, exam_id):
 @app.route("/import_students", methods=["GET", "POST"])
 @login_required
 def import_students():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
 
     classes = SchoolClass.query.all()
 
