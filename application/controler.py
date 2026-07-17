@@ -136,8 +136,12 @@ def add_staff():
         staff.user = user
 
         db.session.add(staff)
-        db.session.commit()
-
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)        
+        
         flash("Staff added successfully.", "success")
         return redirect(url_for("staff_list"))
 
@@ -157,9 +161,15 @@ def activate_staff(staff_id):
     staff = Staff.query.get(staff_id)
     if staff:
         staff.user.is_active = True
-        db.session.commit()
-        flash("Staff activated successfully.", "success")
+        
+        try:
+            db.session.commit()
+            flash("Staff activated successfully.", "success")
 
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")
     return redirect(url_for("staff_list"))
 @app.route("/deactivate_staff/<int:staff_id>", methods=["POST"])
 def deactivate_staff(staff_id):
@@ -168,8 +178,13 @@ def deactivate_staff(staff_id):
     staff = Staff.query.get(staff_id)
     if staff:
         staff.user.is_active = False
-        db.session.commit()
-        flash("Staff deactivated successfully.", "warning")
+        try:
+            db.session.commit()
+            flash("Staff deactivated successfully.", "warning")
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")            
 
     return redirect(url_for("staff_list"))
 
@@ -212,10 +227,14 @@ def add_student():
         student.user = user
 
         db.session.add(student)
-        db.session.commit()
-
-        flash("Student added successfully.", "success")
-        return redirect(url_for("student_list"))
+        try:
+            db.session.commit()
+            flash("Student added successfully.", "success")
+            return redirect(url_for("student_list"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
         
 
@@ -259,10 +278,15 @@ def add_student_bystaff():
         student.user = user
 
         db.session.add(student)
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("Student added successfully.", "success")
-        return redirect(url_for("add_student_bystaff"))
+            flash("Student added successfully.", "success")
+            return redirect(url_for("add_student_bystaff"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
         
 
@@ -281,9 +305,13 @@ def activate_student(student_id):
     student = Student.query.get(student_id)
     if student:
         student.user.is_active = True
-        db.session.commit()
-        flash("Student activated successfully.", "success")
-
+        try:
+            db.session.commit()
+            flash("Student activated successfully.", "success")
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")
     return redirect(url_for("student_list"))
 @app.route("/deactivate_student/<int:student_id>", methods=["POST"])
 def deactivate_student(student_id):
@@ -292,8 +320,13 @@ def deactivate_student(student_id):
     student = Student.query.get(student_id)
     if student:
         student.user.is_active = False
-        db.session.commit()
-        flash("student deactivated successfully.", "warning")
+        try:
+            db.session.commit()
+            flash("student deactivated successfully.", "warning")
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")            
 
     return redirect(url_for("student_list"))
 
@@ -324,11 +357,16 @@ def create_exam():
         )
 
         db.session.add(exam)
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("Exam created successfully.", "success")
+            flash("Exam created successfully.", "success")
 
-        return redirect(url_for("create_exam"))
+            return redirect(url_for("create_exam"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
     return render_template(
         "admin/create_exam.html",
@@ -363,11 +401,16 @@ def add_subject():
         )
 
         db.session.add(subject)
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("Subject added successfully.", "success")
+            flash("Subject added successfully.", "success")
 
-        return redirect(url_for("add_subject"))
+            return redirect(url_for("add_subject"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
     return render_template("admin/add_subject.html" , subjects=subjects ,classes= classes)
 @app.route("/delete_subject/<int:subject_id>", methods=["POST"])
@@ -377,11 +420,16 @@ def delete_subject(subject_id):
     subject = Subject.query.get_or_404(subject_id)
 
     db.session.delete(subject)
-    db.session.commit()
+    try:
+        db.session.commit()
 
-    flash("Subject deleted successfully.", "success")
+        flash("Subject deleted successfully.", "success")
 
-    return redirect(url_for("add_subject"))
+        return redirect(url_for("add_subject"))
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(e)
+        flash("Unable to save staff details. Please check the entered data.", "danger")    
 
 @app.route("/manage_exams")
 @login_required
@@ -431,11 +479,16 @@ def add_marks(exam_id):
 
                 db.session.add(mark)
 
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("Marks saved successfully.", "success")
+            flash("Marks saved successfully.", "success")
 
-        return redirect(url_for("manage_exams"))
+            return redirect(url_for("manage_exams"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
     
     marks = Mark.query.filter_by(exam_id=exam.id).all()
    
@@ -493,10 +546,14 @@ def create_class():
         )
 
         db.session.add(school_class)
-        db.session.commit()
-
-        flash("Class created successfully.", "success")
-        return redirect(url_for("create_class"))
+        try:
+            db.session.commit()
+            flash("Class created successfully.", "success")
+            return redirect(url_for("create_class"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
     return render_template("admin/create_class.html")
 
@@ -520,11 +577,16 @@ def create_fee():
         )
 
         db.session.add(fee)
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("Fee created successfully.", "success")
+            flash("Fee created successfully.", "success")
 
-        return redirect(url_for("create_fee"))
+            return redirect(url_for("create_fee"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
     return render_template("admin/fees/create_fee.html",classes=classes)    
 
@@ -617,11 +679,15 @@ def add_fee(student_id):
         db.session.add(fee)
         db.session.flush()
         fee.receipt_no = f"RCPT2026{fee.id:06d}"
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("Fee collected successfully.", "success")
-        return redirect(url_for('collect_fee'))
-
+            flash("Fee collected successfully.", "success")
+            return redirect(url_for('collect_fee'))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")
     return render_template(
         "admin/add_fee.html",
         student=student,
@@ -770,11 +836,16 @@ def add_school():
         )
 
         db.session.add(school)
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("School added successfully.", "success")
+            flash("School added successfully.", "success")
 
-        return redirect(url_for("school_details"))
+            return redirect(url_for("school_details"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
     return render_template("admin/add_school.html")
 
@@ -853,11 +924,16 @@ def edit_school(id):
 
             school.logo = "uploads/school_logo/" + filename
 
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("School updated successfully.", "success")
+            flash("School updated successfully.", "success")
 
-        return redirect(url_for("school_details"))
+            return redirect(url_for("school_details"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
     return render_template(
         "admin/edit_school.html",
@@ -1025,11 +1101,16 @@ def import_students():
 
             db.session.add(student)
 
-        db.session.commit()
+        try:
+            db.session.commit()
 
-        flash("Students imported successfully.", "success")
+            flash("Students imported successfully.", "success")
 
-        return redirect(url_for("student_list"))
+            return redirect(url_for("student_list"))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(e)
+            flash("Unable to save staff details. Please check the entered data.", "danger")        
 
     return render_template(
         "admin/bulk_add_student.html",
