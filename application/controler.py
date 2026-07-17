@@ -10,18 +10,19 @@ from flask import current_app as app
 from .model import *
 login_manager = LoginManager()
 login_manager.init_app(app)
-app.app_context().push()
+login_manager.login_view = "login"
 
 @login_manager.user_loader
-def load_user(id):
-    return User.query.get(id)
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-app.app_context().push()
+
 #  ========================= App Management ====================
-# @app.route("/")
-# def home():
-
-#     return render_template("home.html")
+@app.errorhandler(Exception) # golble exception handler
+def handle_exception(e):
+    db.session.rollback()
+    app.logger.exception(e)
+    return render_template("500.html"), 500
 @app.route("/", methods=["GET", "POST"])
 def login():
     try:
@@ -37,7 +38,7 @@ def login():
 
             if check_password_hash(this_user.password, password):
 
-                login_user(this_user)
+                login_user(this_user, remember=True)
 
                 if this_user.role == "admin":
                     return redirect("/admin")
@@ -54,7 +55,8 @@ def login():
     except Exception as e:
         db.session.rollback()
         print("ERROR:", e)
-        flash(str(e), "danger")
+        app.logger.exception(e)
+        flash("Something went wrong.", "danger")
         return render_template("login.html")
 
 @app.route("/admin")
@@ -85,6 +87,9 @@ def staff():
     if current_user.role != "staff":
         flash("Only Staff can access this page.", "danger")
         return redirect(url_for("login"))
+    if not current_user.staff:
+            flash("Staff profile not found.", "danger")
+            return redirect(url_for("login"))
 
     return render_template("staff/staff_dashboard.html" , staff=current_user)
 @app.route("/student")
@@ -93,8 +98,15 @@ def student():
     if current_user.role != "student":
         flash("Only Student can access this page.", "danger")
         return redirect(url_for("login"))
-    return render_template("student/student_dashboard.html" , student=current_user,student_id=current_user.student.id)
+    if not current_user.student:
+        flash("Student profile not found.", "danger")
+        return redirect(url_for("login"))
 
+    return render_template(
+    "student/student_dashboard.html",
+    student=current_user,
+    student_id=current_user.student.id
+)
 @app.route("/logout")
 @login_required
 def logout():
