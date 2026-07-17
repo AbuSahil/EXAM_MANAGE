@@ -24,32 +24,38 @@ app.app_context().push()
 #     return render_template("home.html")
 @app.route("/", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]   # Plain password
+    try:
+        if request.method == "POST":
+            email = request.form["email"]
+            password = request.form["password"]   # Plain password
 
-        this_user = User.query.filter_by(email=email).first()
+            this_user = User.query.filter_by(email=email).first()
 
-        if not this_user:
-            flash("Your Email is not registered" , 'danger')
+            if not this_user:
+                flash("Your Email is not registered" , 'danger')
+                return redirect(url_for('login'))
+
+            if check_password_hash(this_user.password, password):
+
+                login_user(this_user)
+
+                if this_user.role == "admin":
+                    return redirect("/admin")
+
+                elif this_user.role == "staff":
+                    return redirect("/staff")
+
+                elif this_user.role == "student":
+                    return redirect("/student")
+            flash("INCORRECT PASSWORD" , 'danger')
             return redirect(url_for('login'))
 
-        if check_password_hash(this_user.password, password):
-
-            login_user(this_user)
-
-            if this_user.role == "admin":
-                return redirect("/admin")
-
-            elif this_user.role == "staff":
-                return redirect("/staff")
-
-            elif this_user.role == "student":
-                return redirect("/student")
-        flash("INCORRECT PASSWORD" , 'danger')
-        return redirect(url_for('login'))
-
-    return render_template("home.html")
+        return render_template("home.html")
+    except Exception as e:
+        db.session.rollback()
+        print("ERROR:", e)
+        flash(str(e), "danger")
+        return render_template("login.html")
 
 @app.route("/admin")
 @login_required
