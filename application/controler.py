@@ -31,6 +31,7 @@ def login():
         this_user = User.query.filter_by(email=email).first()
 
         if not this_user:
+            flash("Your Email is not registered" , 'danger')
             return "<h1>No User Registered with this Email</h1>"
 
         if check_password_hash(this_user.password, password):
