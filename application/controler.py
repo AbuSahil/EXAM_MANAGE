@@ -249,6 +249,10 @@ def add_student():
 @app.route("/add_student_bystaff", methods=["GET", "POST"])
 @login_required
 def add_student_bystaff():
+    if current_user.role != "staff":
+        flash("Only staff can access this page.", "danger")
+        return redirect(url_for("login"))
+
     classes=SchoolClass.query.all()
 
     if request.method == "POST":
@@ -340,6 +344,10 @@ def deactivate_student(student_id):
 @app.route("/create_exam", methods=["GET", "POST"])
 @login_required
 def create_exam():
+    if current_user.role != "admin":
+        flash("Only admin can access this page.", "danger")
+        return redirect(url_for("login"))
+
     exams=Exam.query.order_by(Exam.subject_id).all()
 
     subjects = Subject.query.order_by(Subject.name).all()
@@ -384,6 +392,10 @@ def create_exam():
 
 @app.route("/add_subject", methods=["GET", "POST"])
 def add_subject():
+    if current_user.role != "admin":
+        flash("Only staff can access this page.", "danger")
+        return redirect(url_for("login"))
+
     classes = SchoolClass.query.all()
     subjects = Subject.query.order_by(Subject.class_id).all()
 
@@ -423,6 +435,10 @@ def add_subject():
 @app.route("/delete_subject/<int:subject_id>", methods=["POST"])
 @login_required
 def delete_subject(subject_id):
+    if current_user.role != "staff":
+        flash("Only admin can access this page.", "danger")
+        return redirect(url_for("login"))
+
 
     subject = Subject.query.get_or_404(subject_id)
 
