@@ -9,7 +9,7 @@ app = None
 
 def create_app():
     app = Flask(__name__)
-    app.debug =True
+    app.debug =False
     
     app.config['SECRET_KEY'] = 'qwertyuioplkjhgfdsazxcvbnm'
     app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://schooladmin:BJV2026@localhost:5432/school_management"
