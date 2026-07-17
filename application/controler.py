@@ -32,7 +32,7 @@ def login():
 
         if not this_user:
             flash("Your Email is not registered" , 'danger')
-            return "<h1>No User Registered with this Email</h1>"
+            return redirect(url_for('login'))
 
         if check_password_hash(this_user.password, password):
 
