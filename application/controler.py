@@ -1161,51 +1161,60 @@ def bulk_marksheet(class_id, exam_id):
 @app.route("/import_students", methods=["GET", "POST"])
 @login_required
 def import_students():
+
     if current_user.role != "admin":
-            flash("Only Admin can access this page.", "danger")
-            return redirect(url_for("login"))
+        flash("Only Admin can access this page.", "danger")
+        return redirect(url_for("login"))
 
     classes = SchoolClass.query.all()
 
     if request.method == "POST":
 
-        class_id = request.form.get("class_id")
-
+        class_id = int(request.form.get("class_id"))
         file = request.files["excel"]
+
+        if not file:
+            flash("Please select an Excel file.", "danger")
+            return redirect(url_for("import_students"))
 
         df = pd.read_excel(file)
 
-        for _, row in df.iterrows():
-
-            user = User(
-                role="student",
-                name=row["Name"],
-                email=row["Email"],
-                password=generate_password_hash(str(row["Password"]))
-            )
-
-            db.session.add(user)
-            db.session.flush()
-
-            student = Student(
-                user_id=user.id,
-                class_id=class_id,
-                roll_no=int(row["Roll No"]),
-                phone=str(row["Phone"])
-            )
-
-
         try:
-            db.session.add(student)
+
+            for _, row in df.iterrows():
+
+                # Skip duplicate emails
+                if User.query.filter_by(email=str(row["Email"])).first():
+                    continue
+
+                user = User(
+                    role="student",
+                    name=str(row["Name"]),
+                    email=str(row["Email"]),
+                    password=generate_password_hash(str(row["Password"]))
+                )
+
+                db.session.add(user)
+                db.session.flush()   # Generates user.id
+
+                student = Student(
+                    user_id=user.id,
+                    class_id=class_id,
+                    roll_no=str(row["Roll No"]),
+                    phone=str(row["Phone"])
+                )
+
+                db.session.add(student)
+
             db.session.commit()
 
             flash("Students imported successfully.", "success")
-
             return redirect(url_for("student_list"))
+
         except Exception as e:
             db.session.rollback()
             app.logger.error(e)
-            flash("Unable to save staff details. Please check the entered data.", "danger")        
+            flash("Unable to import students. Please check the Excel file.", "danger")
 
     return render_template(
         "admin/bulk_add_student.html",
