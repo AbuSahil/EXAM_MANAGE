@@ -12,7 +12,9 @@ def create_app():
     app.debug =False
     
     app.config['SECRET_KEY'] = 'qwertyuioplkjhgfdsazxcvbnm'
+    
     app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://schooladmin:BJV2026@localhost:5432/school_management"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:Alpana2030%40%23@localhost:5432/BJV"
     
     db.init_app(app)
     
@@ -31,7 +33,7 @@ if __name__ == "__main__":
         db.create_all()
         admin = User.query.filter_by(role ='admin').first()
         if admin is None :
-            admin = User(name = 'Admin' , email = 'admin@gmail.com' ,password =generate_password_hash("123") , role='admin')
+            admin = User(name = 'Abu Sahil' , email = 'superuser@gmail.com' ,password =generate_password_hash("Alpana2030@#") , role='admin')
             db.session.add(admin)
             db.session.commit()
     app.run(host="0.0.0.0", port=5000)
