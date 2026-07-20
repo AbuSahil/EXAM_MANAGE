@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Coming Soon</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 20px;
+        }
+
+        /* Animated Background Gradient */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Main Container Card */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        /* Pulsing Icon/Loader */
+        .loader-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* Countdown Grid Placeholder */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .time-box {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .time-box label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #ccc;
+            letter-spacing: 1px;
+        }
+
+        /* Notification Form */
+        .notify-box {
+            margin-top: 20px;
+        }
+
+        .notify-box p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            color: #f0f0f0;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        input[type="email"] {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px 0 0 30px;
+            width: 70%;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        button {
+            background: #fff;
+            color: #e73c7e;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        button:hover {
+            background: #23a6d5;
+            color: #fff;
+        }
+
+        /* Footer Info */
+        .footer-text {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #dddddd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .countdown-container { gap: 8px; }
+            .time-box { min-width: 65px; padding: 10px; }
+            .time-box span { font-size: 1.4rem; }
+            .input-group { flex-direction: column; gap: 10px; }
+            input[type="email"], button { border-radius: 30px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Icon -->
+        <div class="loader-icon">📢</div>
+
+        <!-- Headings -->
+        <h1>Results Announcement</h1>
+        <p class="subtitle">The wait is almost over! We are finalizing the scores.</p>
+
+        <!-- Countdown Timer Placeholders (Can be hooked up to JS) -->
+        <div class="countdown-container">
+            <div class="time-box">
+                <span id="days">00</span>
+                <label>Days</label>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <label>Hours</label>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <label>Mins</label>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <label>Secs</label>
+            </div>
+        </div>
+
+        <!-- Notification Form -->
+        <!-- <div class="notify-box">
+            <p>Want to get notified the second results go live?</p>
+            <form action="#" method="POST" class="input-group">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit">Notify Me</button>
+            </form> -->
+        </div>
+
+        <!-- Footer Note -->
+        <p class="footer-text">© 2026 BJV. All rights reserved.</p>
+    </div>
+
+    <!-- Optional: Simple Countdown JavaScript -->
+    <script>
+        // Set your target announcement date here (e.g., 3 days from now)
+        const targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() + 15); 
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = d < 10 ? "0" + d : d;
+            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+            document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
+            document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
+        }
+
+        // Run countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>

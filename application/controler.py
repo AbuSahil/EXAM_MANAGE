@@ -101,12 +101,12 @@ def student():
     if not current_user.student:
         flash("Student profile not found.", "danger")
         return redirect(url_for("login"))
-
-    return render_template(
-    "student/student_dashboard.html",
-    student=current_user,
-    student_id=current_user.student.id
-)
+    return render_template("student/result_soon.html")
+#     return render_template(
+#     "student/student_dashboard.html",
+#     student=current_user,
+#     student_id=current_user.student.id
+# )
 @app.route("/logout")
 @login_required
 def logout():
