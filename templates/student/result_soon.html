@@ -22,158 +22,190 @@
             justify-content: center;
             align-items: center;
             color: #fff;
-            padding: 20px;
+            padding: 16px;
         }
 
-        /* Animated Background Gradient */
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* Main Container Card */
+        /* Responsive Container */
         .container {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3rem 2rem;
-            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            border-radius: 24px;
             text-align: center;
-            max-width: 600px;
             width: 100%;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            max-width: 540px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
         }
 
-        /* Typography */
+        /* Typography with Fluid Sizing */
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: clamp(1.8rem, 6vw, 2.4rem);
+            line-height: 1.2;
+            margin-bottom: 12px;
             font-weight: 700;
-            letter-spacing: 1px;
         }
 
         p.subtitle {
-            font-size: 1.1rem;
-            color: #e0e0e0;
-            margin-bottom: 30px;
+            font-size: clamp(0.95rem, 4vw, 1.1rem);
+            color: #f0f0f0;
+            margin-bottom: 2rem;
+            line-height: 1.5;
         }
 
-        /* Pulsing Icon/Loader */
         .loader-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: clamp(3rem, 10vw, 4rem);
+            margin-bottom: 15px;
             animation: pulse 2s infinite;
+            display: inline-block;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.08); opacity: 1; }
         }
 
-        /* Countdown Grid Placeholder */
+        /* Grid-based Responsive Countdown */
         .countdown-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 35px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 2rem;
         }
 
         .time-box {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            min-width: 80px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 12px 6px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .time-box span {
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
+            font-weight: 700;
             display: block;
-            font-size: 1.8rem;
-            font-weight: bold;
+            line-height: 1.1;
         }
 
         .time-box label {
-            font-size: 0.8rem;
+            font-size: clamp(0.65rem, 2.5vw, 0.8rem);
             text-transform: uppercase;
-            color: #ccc;
-            letter-spacing: 1px;
+            color: #ddd;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
         }
 
-        /* Notification Form */
+        /* Mobile-first Form Design */
         .notify-box {
-            margin-top: 20px;
+            margin-top: 1.5rem;
         }
 
         .notify-box p {
             font-size: 0.95rem;
             margin-bottom: 15px;
-            color: #f0f0f0;
+            color: #fff;
         }
 
         .input-group {
             display: flex;
-            justify-content: center;
-            max-width: 400px;
-            margin: 0 auto;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
         }
 
         input[type="email"] {
-            padding: 12px 20px;
+            padding: 14px 20px;
             border: none;
-            border-radius: 30px 0 0 30px;
-            width: 70%;
+            border-radius: 30px;
+            width: 100%;
             outline: none;
             font-size: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         button {
             background: #fff;
             color: #e73c7e;
             border: none;
-            padding: 12px 25px;
-            border-radius: 0 30px 30px 0;
+            padding: 14px 20px;
+            border-radius: 30px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 1rem;
-            transition: background 0.3s ease, color 0.3s ease;
+            width: 100%;
+            transition: transform 0.2s ease, background 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        button:hover {
-            background: #23a6d5;
-            color: #fff;
+        button:active {
+            transform: scale(0.98);
         }
 
-        /* Footer Info */
         .footer-text {
-            margin-top: 40px;
-            font-size: 0.8rem;
-            color: #dddddd;
+            margin-top: 2.5rem;
+            font-size: 0.75rem;
+            color: #eee;
+            opacity: 0.8;
         }
 
-        /* Responsive Design */
-        @media (max-width: 480px) {
-            h1 { font-size: 2rem; }
-            .countdown-container { gap: 8px; }
-            .time-box { min-width: 65px; padding: 10px; }
-            .time-box span { font-size: 1.4rem; }
-            .input-group { flex-direction: column; gap: 10px; }
-            input[type="email"], button { border-radius: 30px; width: 100%; }
+        /* Tablet and Desktop Enhancements */
+        @media (min-width: 480px) {
+            .container {
+                padding: 3rem 2.5rem;
+            }
+            .countdown-container {
+                gap: 16px;
+            }
+            .time-box {
+                padding: 16px 10px;
+            }
+            .input-group {
+                flex-direction: row;
+                gap: 0;
+                background: #fff;
+                border-radius: 30px;
+                padding: 4px;
+                overflow: hidden;
+            }
+            input[type="email"] {
+                text-align: left;
+                border-radius: 30px 0 0 30px;
+                padding: 12px 20px;
+                box-shadow: none;
+            }
+            button {
+                width: auto;
+                white-space: nowrap;
+                border-radius: 30px;
+                padding: 12px 28px;
+                box-shadow: none;
+            }
+            button:hover {
+                background: #23a6d5;
+                color: #fff;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Icon -->
         <div class="loader-icon">📢</div>
 
-        <!-- Headings -->
         <h1>Results Announcement</h1>
-        <p class="subtitle">The wait is almost over! We are finalizing the scores.</p>
+        <p class="subtitle">The wait is almost over. We are compiling the final scores!</p>
 
-        <!-- Countdown Timer Placeholders (Can be hooked up to JS) -->
+        <!-- Dynamic Grid Countdown -->
         <div class="countdown-container">
             <div class="time-box">
                 <span id="days">00</span>
@@ -193,24 +225,22 @@
             </div>
         </div>
 
-        <!-- Notification Form -->
+        <!-- Touch-Optimized Form -->
         <!-- <div class="notify-box">
-            <p>Want to get notified the second results go live?</p>
+            <p>Get an instant alert as soon as results are out:</p>
             <form action="#" method="POST" class="input-group">
-                <input type="email" placeholder="Enter your email address" required>
+                <input type="email" placeholder="Enter your email" required>
                 <button type="submit">Notify Me</button>
-            </form> -->
-        </div>
+            </form>
+        </div> -->
 
-        <!-- Footer Note -->
         <p class="footer-text">© 2026 BJV. All rights reserved.</p>
     </div>
 
-    <!-- Optional: Simple Countdown JavaScript -->
     <script>
-        // Set your target announcement date here (e.g., 3 days from now)
+        // Adjust the countdown target here
         const targetDate = new Date();
-        targetDate.setDate(targetDate.getDate() + 15); 
+        targetDate.setDate(targetDate.getDate() + 10); 
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -227,7 +257,6 @@
             document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
         }
 
-        // Run countdown every second
         setInterval(updateCountdown, 1000);
         updateCountdown();
     </script>
