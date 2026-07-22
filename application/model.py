@@ -76,6 +76,7 @@ class Student(db.Model):
     roll_no = db.Column(db.String(20), nullable=False)
     class_id = db.Column(db.Integer,db.ForeignKey("classes.id"),nullable=False)
     phone = db.Column(db.String(15))
+      
     # Relationships
     user = db.relationship("User", back_populates="student")
     marks = db.relationship("Mark",back_populates="student",cascade="all, delete-orphan")

@@ -718,6 +718,7 @@ def collect_fee():
         students=students,
         classes=classes
     )
+    # return render_template("admin/fees/fee_dashboard")
 
 @app.route("/add_fee/<int:student_id>", methods=["GET", "POST"])
 @login_required

@@ -40,7 +40,7 @@
 
                             {% for subject in subjects %}
                             <option value="{{ subject.id }}">
-                                {{ subject.name }} ({{ subject.school_class.name }})
+                                {{ subject.name }} ({{ subject.school_class.name }})-({{ subject.school_class.section }})
                             </option>
                             {% endfor %}
 
