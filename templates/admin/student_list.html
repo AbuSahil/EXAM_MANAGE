@@ -95,11 +95,11 @@
                                         Deactivate
                                     </button>
                                 </form>
-                                <form action="/student_result/{{student.id}}" method="POST" class="d-inline">
+                                <form action="/edit_student/{{student.user.id}}" method="POST" class="d-inline">
                                     <input type="hidden" name="student_id" value="{{ student.id }}">
                                     <button type="submit" class="btn btn-success btn-sm">
                                         <i class="bi bi-check-circle"></i>
-                                        Create Result
+                                        Update Student
                                     </button>
                                 </form>
 

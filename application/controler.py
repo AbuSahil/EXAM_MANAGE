@@ -3,7 +3,8 @@ from flask_login import LoginManager , login_required , current_user, logout_use
 import pandas as pd
 from werkzeug.security import generate_password_hash ,check_password_hash
 
-from sqlalchemy import or_
+from sqlalchemy import or_ , Integer,cast
+
 # from app import  --> circular import error
 from flask import current_app as app
 
@@ -107,6 +108,33 @@ def student():
     student=current_user,
     student_id=current_user.student.id
 )
+@app.route("/edit_student/<int:id>", methods=["GET", "POST"])
+@login_required
+def edit_student(id):
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
+
+    user = User.query.get_or_404(id)
+
+    if request.method == "POST":
+
+        user.name = request.form.get("name")
+        try:
+                    db.session.commit()
+        
+                    flash("Stdent updated successfully.", "success")
+        
+                    return redirect(url_for("school_details"))
+        except Exception as e:
+                    db.session.rollback()
+                    app.logger.error(e)
+                    flash("Unable to save staff details. Please check the entered data.", "danger")        
+        
+    return render_template(
+                "admin/edit_student.html",
+                user=user
+            )
 @app.route("/logout")
 @login_required
 def logout():
@@ -516,14 +544,6 @@ def add_marks(exam_id):
     if current_user.staff is None or current_user.staff.id != exam.staff_id:
         flash("You are not the examiner for this subject.", "danger")
         return redirect(url_for("staff"))
-
-    
-
-    # students = Student.query.filter_by(
-    #     class_id=exam.subject.class_id
-    # ).order_by(Student.roll_no).all()
-    from sqlalchemy import cast, Integer
-
     students = (
     Student.query
     .filter_by(class_id=exam.subject.class_id)
