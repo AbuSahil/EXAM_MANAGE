@@ -507,12 +507,17 @@ def manage_exams():
 @app.route("/add_marks/<int:exam_id>", methods=["GET", "POST"])
 @login_required
 def add_marks(exam_id):
+    exam = Exam.query.get_or_404(exam_id)
 
     if current_user.role != "staff":
-        flash("Only Staff can access this page.", "danger")
+        flash("Only staff can access this page.", "danger")
         return redirect(url_for("login"))
 
-    exam = Exam.query.get_or_404(exam_id)
+    if current_user.staff is None or current_user.staff.id != exam.staff_id:
+        flash("You are not the examiner for this subject.", "danger")
+        return redirect(url_for("staff"))
+
+    
 
     students = Student.query.filter_by(
         class_id=exam.subject.class_id
