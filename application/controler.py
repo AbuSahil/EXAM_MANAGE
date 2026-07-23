@@ -4,6 +4,7 @@ import pandas as pd
 from werkzeug.security import generate_password_hash ,check_password_hash
 
 from sqlalchemy import or_
+from sqlalchemy import cast, Integer
 # from app import  --> circular import error
 from flask import current_app as app
 
@@ -519,9 +520,14 @@ def add_marks(exam_id):
 
     
 
-    students = Student.query.filter_by(
-        class_id=exam.subject.class_id
-    ).order_by(Student.roll_no).all()
+    
+
+    students = (
+    Student.query
+    .filter_by(class_id=exam.class_id)
+    .order_by(cast(Student.roll_no, Integer))
+    .all()
+)
 
     if request.method == "POST":
 
