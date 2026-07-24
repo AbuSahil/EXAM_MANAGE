@@ -35,6 +35,7 @@
 
                     <thead class="table-dark">
                         <tr>
+                            <th>Staff ID</th>
                             <th>Employee ID</th>
                             <th>Name</th>
                             <th>Phone No</th>
@@ -49,6 +50,7 @@
 
                         {% for staff in staffs %}
                         <tr>
+                            <td>{{ staff.id}}</td>
 
                             <td>
                                 <strong>{{ staff.employee_id }}</strong>
