@@ -1,6 +1,8 @@
 from flask import Flask , redirect , render_template , request , flash
 from flask_login import LoginManager , login_required , login_user , logout_user
 from application.database import db
+# from application.master_database import init_master_db
+# from application.school_model import School
 from sqlalchemy import text
 
 import psycopg2
@@ -18,6 +20,7 @@ def create_app():
     # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite3" 
     
     db.init_app(app)
+    # init_master_db(app)
     
     app.app_context().push()
     return app

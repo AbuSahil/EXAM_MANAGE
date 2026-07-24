@@ -23,7 +23,10 @@ def load_user(user_id):
 def handle_exception(e):
     db.session.rollback()
     app.logger.exception(e)
-    return render_template("500.html"), 500
+    return render_template("admin/500.html" , user=current_user), 500
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
 @app.route("/", methods=["GET", "POST"])
 def login():
     try:
@@ -121,15 +124,15 @@ def edit_student(id):
 
         user.name = request.form.get("name")
         try:
-                    db.session.commit()
+            db.session.commit()
         
-                    flash("Stdent updated successfully.", "success")
+            flash("Stdent updated successfully.", "success")
         
-                    return redirect(url_for("school_details"))
+            return redirect(url_for("student_list"))
         except Exception as e:
-                    db.session.rollback()
-                    app.logger.error(e)
-                    flash("Unable to save staff details. Please check the entered data.", "danger")        
+                db.session.rollback()
+                app.logger.error(e)
+                flash("Unable to save student details. Please check the entered data.", "danger")        
         
     return render_template(
                 "admin/edit_student.html",
@@ -367,15 +370,25 @@ def add_student_bystaff():
 
     return render_template("staff/add_student.html", classes=classes ,staff=current_user)
 
-@app.route("/student_list")
+@app.route("/student_list" , methods=['GET','POST'])
 @login_required
 def student_list():
     if current_user.role != "admin":
             flash("Only Admin can access this page.", "danger")
             return redirect(url_for("login"))
     students=Student.query.all()
+    classes = SchoolClass.query.all()
+    if request.method == 'POST':
+        class_id=request.form.get('class_id')
+        query = Student.query.join(User)
 
-    return render_template("admin/student_list.html" , students=students)
+        if class_id:
+            query = query.filter(Student.class_id == class_id)
+         
+            students = query.order_by(cast(Student.roll_no, Integer)).all()
+
+
+    return render_template("admin/student_list.html" , students=students , classes=classes)
 @app.route("/activate_student/<int:student_id>", methods=["POST"])
 def activate_student(student_id):
     
@@ -1266,3 +1279,20 @@ def import_students():
         "admin/bulk_add_student.html",
         classes=classes
     )
+
+
+@app.route("/class_list")
+@login_required
+def class_list():
+    if current_user.role != "admin":
+            flash("Only Admin can access this page.", "danger")
+            return redirect(url_for("login"))
+
+    classes = SchoolClass.query.all()
+
+    return render_template(
+        "admin/class_list.html",
+        classes=classes
+    )
+
+

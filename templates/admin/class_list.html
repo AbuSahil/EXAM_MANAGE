@@ -1,0 +1,115 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}Class List{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Heading -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>
+            <i class="bi bi-mortarboard-fill"></i>
+            Classes Available in Your School
+        </h3>
+
+        <a href="{{ url_for('create_class') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>
+            Add New Class
+        </a>
+    </div>
+
+    
+    <!-- Table -->
+    <div class="card border-0 shadow-lg rounded-4">
+
+    <div class="card-header bg-white border-0 py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold text-primary">
+                <i class="bi bi-people-fill me-2"></i>
+                Class List
+            </h5>
+
+            <span class="badge bg-primary fs-6 px-3 py-2">
+                Total: {{ classes|length }}
+            </span>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0" id="classTable">
+
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>Class ID</th>
+                        <th>Class Name</th>
+                        <th>Section</th>
+                    </tr>
+                </thead>
+
+                <tbody class="text-center">
+
+                    {% for c in classes %}
+                    <tr>
+
+                        <td>
+                            <span class="badge rounded-pill bg-light text-dark">
+                                {{ loop.index }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="fw-semibold text-primary">
+                                {{ c.id }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-mortarboard-fill text-success me-2"></i>
+                            <strong>{{ c.name }}</strong>
+                        </td>
+                         <td>
+                            <span class="fw-semibold text-primary">
+                                {{ c.section }}
+                            </span>
+                        </td>
+
+
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center py-5">
+
+                            <i class="bi bi-inbox display-4 text-secondary"></i>
+
+                            <h5 class="mt-3 text-muted">
+                                No Classes Found
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Add a class to see it listed here.
+                            </p>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+{% endblock %}
