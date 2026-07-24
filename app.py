@@ -4,6 +4,7 @@ from application.database import db
 # from application.master_database import init_master_db
 # from application.school_model import School
 from sqlalchemy import text
+from datetime import timedelta
 
 import psycopg2
 # app=Flask(__name__) 
@@ -14,6 +15,9 @@ def create_app():
     app.debug =False
     
     app.config['SECRET_KEY'] = 'qwertyuioplkjhgfdsazxcvbnm'
+    
+
+    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=8)
     
     app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://schooladmin:BJV2026@localhost:5432/school_management"
     # app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:Alpana2030%40%23@localhost:5432/BJV"

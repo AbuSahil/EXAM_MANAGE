@@ -1,4 +1,4 @@
-from flask import Flask, flash , render_template , redirect , request,url_for
+from flask import Flask, flash , render_template , redirect , request,url_for,session
 from flask_login import LoginManager , login_required , current_user, logout_user , login_user
 import pandas as pd
 from werkzeug.security import generate_password_hash ,check_password_hash
@@ -43,6 +43,7 @@ def login():
             if check_password_hash(this_user.password, password):
 
                 login_user(this_user, remember=True)
+                session.permanent = True
 
                 if this_user.role == "admin":
                     return redirect("/admin")
