@@ -1119,7 +1119,7 @@ from datetime import datetime
 @app.route("/bulk_marksheet/<int:class_id>/<int:exam_id>")
 @login_required
 def bulk_marksheet(class_id, exam_id):
-    if current_user.role != "admin":
+    if current_user.role is None or current_user.role != "admin":
             flash("Only Admin can access this page.", "danger")
             return redirect(url_for("login"))
 
