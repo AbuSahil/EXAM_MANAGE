@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container mt-4">
+<div class="container-fluid mt-4">
 
     <div class="card shadow border-0">
 
@@ -17,106 +17,190 @@
 
         <div class="card-body">
 
-            <div class="row mb-4">
+            <!-- Exam Information -->
+            <div class="row g-3 mb-4">
 
-                <div class="col-md-3">
-                    <strong>Exam :</strong> {{ exam.name }}
+                <div class="col-6 col-md-3">
+                    <div class="border rounded p-2">
+                        <strong>Exam</strong><br>
+                        {{ exam.name }}
+                    </div>
                 </div>
 
-                <div class="col-md-3">
-                    <strong>Subject :</strong> {{ exam.subject.name }}
+                <div class="col-6 col-md-3">
+                    <div class="border rounded p-2">
+                        <strong>Subject</strong><br>
+                        {{ exam.subject.name }}
+                    </div>
                 </div>
 
-                <div class="col-md-3">
-                    <strong>Class :</strong> {{ exam.subject.school_class.name }}
-                </div>
-                <div class="col-md-3">
-                    <strong>Section :</strong> {{ exam.subject.school_class.section }}
-                </div>
-
-                <div class="col-md-3">
-                    <strong>Total Marks :</strong> {{ exam.total_marks }}
+                <div class="col-6 col-md-3">
+                    <div class="border rounded p-2">
+                        <strong>Class</strong><br>
+                        {{ exam.subject.school_class.name }}
+                    </div>
                 </div>
 
-                <div class="col-md-3">
-                    <strong>Date :</strong> {{ exam.exam_date }}
+                <div class="col-6 col-md-3">
+                    <div class="border rounded p-2">
+                        <strong>Section</strong><br>
+                        {{ exam.subject.school_class.section }}
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <div class="border rounded p-2">
+                        <strong>Total Marks</strong><br>
+                        {{ exam.total_marks }}
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <div class="border rounded p-2">
+                        <strong>Date</strong><br>
+                        {{ exam.exam_date }}
+                    </div>
                 </div>
 
             </div>
 
             <form method="POST">
 
-                <table class="table table-bordered table-hover align-middle">
+                <!-- Desktop Table -->
+                <div class="table-responsive d-none d-lg-block">
 
-                    <thead class="table-dark">
+                    <table class="table table-bordered table-hover align-middle">
 
-                        <tr>
+                        <thead class="table-dark">
 
-                            <th>Roll No</th>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Student Name</th>
+                                <th width="150">Marks</th>
+                                <th>Remarks</th>
+                            </tr>
 
-                            <th>Student Name</th>
+                        </thead>
 
-                            <th width="150">
-                                Marks
-                            </th>
+                        <tbody>
 
-                            
+                            {% for student in students %}
 
-                            <th>
-                                Remarks
-                            </th>
+                            {% set mark = marks | selectattr("student_id","equalto",student.id) | first %}
 
-                        </tr>
+                            <tr>
 
-                    </thead>
+                                <td>
+                                    {{ student.roll_no }}
+                                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                                </td>
 
-                    <tbody>
+                                <td>{{ student.user.name }}</td>
 
-                        {% for student in students %}
+                                <td>
 
-                        <tr>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name="marks"
+                                        min="0"
+                                        max="{{ exam.total_marks }}"
+                                        value="{{ mark.marks_obtained if mark else '' }}"
+                                        oninput="if(this.value>this.max)this.value=this.max;"
+                                        required>
 
-                            <td>
+                                </td>
 
-                                {{ student.roll_no }}
+                                <td>
 
-                                <input type="hidden" name="student_id" value="{{ student.id }}">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="remarks"
+                                        value="{{ mark.remarks if mark else '' }}">
 
-                            </td>
+                                </td>
 
-                            <td>
+                            </tr>
 
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- Mobile Cards -->
+                <div class="d-lg-none">
+
+                    {% for student in students %}
+
+                    {% set mark = marks | selectattr("student_id","equalto",student.id) | first %}
+
+                    <div class="card mb-3 shadow-sm">
+
+                        <div class="card-body">
+
+                            <input type="hidden" name="student_id" value="{{ student.id }}">
+
+                            <h5 class="mb-3">
                                 {{ student.user.name }}
+                            </h5>
 
-                            </td>
+                            <p class="mb-2">
+                                <strong>Roll No :</strong>
+                                {{ student.roll_no }}
+                            </p>
 
-                            <td>
-                            
-                                {% set mark = marks | selectattr("student_id", "equalto", student.id) | first %}
+                            <div class="mb-3">
 
-                                <input type="number" class="form-control" name="marks" min="0"
-                                    max="{{ exam.total_marks }}" value="{{ mark.marks_obtained if mark else '' }}"
-                                    oninput="if(this.value > this.max) this.value = this.max;" required>
-                            
-                            </td>
+                                <label class="form-label">
+                                    Marks
+                                </label>
 
-                            
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    name="marks"
+                                    min="0"
+                                    max="{{ exam.total_marks }}"
+                                    value="{{ mark.marks_obtained if mark else '' }}"
+                                    oninput="if(this.value>this.max)this.value=this.max;"
+                                    required>
 
-                            <td>
+                            </div>
 
-                                <input type="text" class="form-control" name="remarks" value="{{ mark.remarks if mark else '' }}">
+                            <div>
 
-                            </td>
+                                <label class="form-label">
+                                    Remarks
+                                </label>
 
-                        </tr>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="remarks"
+                                    value="{{ mark.remarks if mark else '' }}">
 
-                        {% endfor %}
+                            </div>
 
-                    </tbody>
+                        </div>
 
-                </table>
+                    </div>
 
-                <div class="text-end">
+                    {% endfor %}
+
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
+
+                    <a href="/manage_exams" class="btn btn-primary">
+                        <i class="bi bi-arrow-left"></i>
+                        Back
+                    </a>
+
+                    
 
                     <button type="submit" class="btn btn-success">
 
@@ -126,17 +210,11 @@
 
                     </button>
                     
+                
+
                 </div>
 
             </form>
-            <a href="/manage_exams"><button class="btn btn-primary btn-login">
-
-                        <i class="bi bi-box-arrow-in-left"></i>
-
-                        Back
-
-                    </button></a>
-
 
         </div>
 

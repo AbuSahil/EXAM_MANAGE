@@ -1,33 +1,32 @@
-{% extends "admin/admin_dashboard.html"%}
+{% extends "admin/admin_dashboard.html" %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
 
     <h3 class="mb-0">
         <i class="bi bi-people-fill"></i> Student Management
     </h3>
 
     <a href="/add_student" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i>
-        Add New Student
+        <i class="bi bi-plus-circle"></i> Add New Student
     </a>
 
 </div>
-<div class="container mt-4">
-    <form method="POST">
 
-    <div class="row">
+<div class="container-fluid px-0">
 
-        
+    <!-- Search -->
+    <form method="POST" class="row g-2 mb-4">
 
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
 
             <select class="form-select" name="class_id">
 
                 <option value="">All Classes</option>
 
                 {% for c in classes %}
-                <option value="{{c.id}}">
-                    {{c.name}}-{{c.section}}
+                <option value="{{ c.id }}">
+                    {{ c.name }} - {{ c.section }}
                 </option>
                 {% endfor %}
 
@@ -35,126 +34,197 @@
 
         </div>
 
-        <div class="col-md-3">
-
+        <div class="col-12 col-md-3">
             <button class="btn btn-primary w-100">
-                Search
+                <i class="bi bi-search"></i> Search
             </button>
+        </div>
+
+    </form>
+
+    <!-- Desktop Table -->
+
+    <div class="card shadow border-0 d-none d-lg-block">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0">
+                <i class="bi bi-people-fill"></i>
+                Student Management
+            </h5>
+
+            <span class="badge bg-light text-primary">
+                Total: {{ students|length }}
+            </span>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Roll</th>
+                        <th>Section</th>
+                        <th>Status</th>
+                        <th width="300">Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.user.name }}</td>
+                        <td>{{ student.school_class.name }}</td>
+                        <td>{{ student.roll_no }}</td>
+                        <td>{{ student.school_class.section }}</td>
+
+                        <td>
+
+                            {% if student.user.is_active %}
+                            <span class="badge bg-success">Active</span>
+                            {% else %}
+                            <span class="badge bg-danger">Inactive</span>
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <form action="/activate_student/{{student.id}}" method="POST" class="d-inline">
+
+                                <button class="btn btn-success btn-sm">
+                                    Activate
+                                </button>
+
+                            </form>
+
+                            <form action="/deactivate_student/{{student.id}}" method="POST" class="d-inline">
+
+                                <button class="btn btn-danger btn-sm">
+                                    Deactivate
+                                </button>
+
+                            </form>
+
+                            <a href="/edit_student/{{student.user.id}}" class="btn btn-warning btn-sm">
+                                Update
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
 
         </div>
 
     </div>
 
-</form>
-<br><br>
+    <!-- Mobile Cards -->
 
-    <div class="card shadow-lg border-0 rounded-4">
+    <div class="d-lg-none">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
-        <!-- Card Header -->
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
-            <h4 class="mb-0">
-                <i class="bi bi-people-fill"></i> Student Management
-            </h4>
+            <h5 class="mb-0">
+                <i class="bi bi-people-fill"></i>
+                Student Management
+            </h5>
 
-            <span class="badge bg-light text-primary fs-6">
-                Total Student: {{ students|length }}
+            <span class="badge bg-light text-primary">
+                Total: {{ students|length }}
             </span>
+
         </div>
 
-        <!-- Card Body -->
-        <div class="card-body">
+        {% for student in students %}
+        
 
-            <div class="table-responsive">
+        <div class="card shadow-sm mb-3">
 
-                <table class="table table-hover align-middle">
+            <div class="card-body">
 
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Student ID</th>
-                            <th>Name</th>
-                            
-                            <th>Class</th>
-                            <th>Roll NO</th>
-                            <th>Section</th>
-                            <th>Status</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
+                <div class="d-flex justify-content-between">
 
-                    <tbody>
+                    <h5 class="mb-2">
+                        {{ student.user.name }}
+                    </h5>
 
-                        {% for student in students %}
-                        <tr>
+                    <span class="badge {% if student.user.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                        {% if student.user.is_active %}
+                        Active
+                        {% else %}
+                        Inactive
+                        {% endif %}
+                    </span>
 
-                            <td>
-                                <strong>{{ student.id }}</strong>
-                            </td>
+                </div>
 
-                            <td>
-                                {{ student.user.name }}
-                            </td>
-                            
+                <p class="mb-1">
+                    <strong>ID:</strong> {{ student.id }}
+                </p>
 
-                            <td>
-                                {{ student.school_class.name }}
-                                
-                            </td>
+                <p class="mb-1">
+                    <strong>Class:</strong>
+                    {{ student.school_class.name }}
+                </p>
 
-                            <td>
-                                {{ student.roll_no }}
-                            </td>
-                            <td>
-                                {{ student.school_class.section }}
-                            </td>
-                            <td>
-                                {{ student.user.is_active }}
-                            </td>
+                <p class="mb-1">
+                    <strong>Section:</strong>
+                    {{ student.school_class.section }}
+                </p>
 
+                <p class="mb-3">
+                    <strong>Roll No:</strong>
+                    {{ student.roll_no }}
+                </p>
 
-                            <td class="text-center">
+                <div class="d-grid gap-2">
 
+                    <form action="/activate_student/{{student.id}}" method="POST">
 
+                        <button class="btn btn-success btn-sm w-100">
+                            Activate
+                        </button>
 
-                                <!-- Activate Form -->
-                                <form action="/activate_student/{{student.id}}" method="POST" class="d-inline">
-                                    <input type="hidden" name="student_id" value="{{ student.id }}">
-                                    <button type="submit" class="btn btn-success btn-sm me-2">
-                                        <i class="bi bi-check-circle"></i>
-                                        Activate
-                                    </button>
-                                </form>
+                    </form>
 
-                                <!-- Deactivate Form -->
-                                <form action="/deactivate_student/{{student.id}}" method="POST" class="d-inline">
-                                    <input type="hidden" name="student_id" value="{{ student.id }}">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-x-circle"></i>
-                                        Deactivate
-                                    </button>
-                                </form>
-                                
-                                    
-                                   <a href="/edit_student/{{student.user.id}}"><button type="submit" class="btn btn-success btn-sm">
-                                        <i class="bi bi-check-circle"></i>
-                                        Update Student
-                                    </button></a> 
-                                
+                    <form action="/deactivate_student/{{student.id}}" method="POST">
 
+                        <button class="btn btn-danger btn-sm w-100">
+                            Deactivate
+                        </button>
 
+                    </form>
 
-                            </td>
+                    <a href="/edit_student/{{student.user.id}}" class="btn btn-warning btn-sm">
+                        Update Student
+                    </a>
 
-                        </tr>
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
+                </div>
 
             </div>
 
         </div>
 
+        {% endfor %}
+
     </div>
+
 </div>
+
 {% endblock %}
