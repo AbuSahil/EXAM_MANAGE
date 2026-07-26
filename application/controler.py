@@ -1372,3 +1372,55 @@ def exam_report():
         selected_class=selected_class,
         selected_exam=selected_exam
     )
+
+
+
+@app.route("/print_exam_report")
+@login_required
+def print_exam_report():
+
+    class_id = request.args.get("class_id")
+    exam_name = request.args.get("exam_name")
+
+    school_class = SchoolClass.query.get_or_404(class_id)
+
+    subjects = Subject.query.filter_by(class_id=class_id).all()
+
+    columns = [
+        Student.roll_no,
+        User.name
+    ]
+
+    for subject in subjects:
+
+        columns.append(
+            func.max(Mark.marks_obtained)
+            .filter(Subject.id == subject.id)
+            .label(subject.name)
+        )
+
+    results = (
+        db.session.query(*columns)
+        .join(User, Student.user_id == User.id)
+        .join(Mark, Student.id == Mark.student_id)
+        .join(Exam, Mark.exam_id == Exam.id)
+        .join(Subject, Exam.subject_id == Subject.id)
+        .filter(
+            Student.class_id == class_id,
+            Exam.name == exam_name
+        )
+        .group_by(
+            Student.roll_no,
+            User.name
+        )
+        .order_by(Student.roll_no.cast(db.Integer))
+        .all()
+    )
+
+    return render_template(
+        "admin/print_exam_report.html",
+        school_class=school_class,
+        exam_name=exam_name,
+        subjects=subjects,
+        results=results
+    )    

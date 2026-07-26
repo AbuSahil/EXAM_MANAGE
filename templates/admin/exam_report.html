@@ -38,8 +38,7 @@ Exam Report
 
                             {% for c in classes %}
 
-                            <option value="{{ c.id }}"
-                                {% if selected_class == c.id|string %}selected{% endif %}>
+                            <option value="{{ c.id }}" {% if selected_class==c.id|string %}selected{% endif %}>
 
                                 {{ c.name }} - {{ c.section }}
 
@@ -67,8 +66,7 @@ Exam Report
 
                             {% for exam in exam_names %}
 
-                            <option value="{{ exam.name }}"
-                                {% if selected_exam == exam.name %}selected{% endif %}>
+                            <option value="{{ exam.name }}" {% if selected_exam==exam.name %}selected{% endif %}>
 
                                 {{ exam.name }}
 
@@ -93,6 +91,14 @@ Exam Report
                         </button>
 
                     </div>
+                    {% if results %}
+                    <a href="{{ url_for('print_exam_report',
+                    class_id=selected_class,
+                    exam_name=selected_exam) }}" target="_blank" class="btn btn-success">
+                        <i class="bi bi-printer"></i>
+                        Print Report
+                    </a>
+                    {% endif %}
 
                 </div>
 
