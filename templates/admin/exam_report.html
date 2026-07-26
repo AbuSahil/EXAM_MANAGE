@@ -1,0 +1,169 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}
+Exam Report
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                Student Exam Report
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="row g-3">
+
+                    <!-- Class -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Class
+                        </label>
+
+                        <select class="form-select" name="class_id" required>
+
+                            <option value="">
+                                Select Class
+                            </option>
+
+                            {% for c in classes %}
+
+                            <option value="{{ c.id }}"
+                                {% if selected_class == c.id|string %}selected{% endif %}>
+
+                                {{ c.name }} - {{ c.section }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <!-- Exam -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Exam
+                        </label>
+
+                        <select class="form-select" name="exam_name" required>
+
+                            <option value="">
+                                Select Exam
+                            </option>
+
+                            {% for exam in exam_names %}
+
+                            <option value="{{ exam.name }}"
+                                {% if selected_exam == exam.name %}selected{% endif %}>
+
+                                {{ exam.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 d-grid">
+
+                        <label class="form-label">&nbsp;</label>
+
+                        <button class="btn btn-primary">
+
+                            <i class="bi bi-search"></i>
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+            {% if results %}
+
+            <hr>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-striped">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Roll No</th>
+
+                            <th>Student Name</th>
+
+                            {% for subject in subjects %}
+
+                            <th>
+
+                                {{ subject.name }}
+
+                            </th>
+
+                            {% endfor %}
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for row in results %}
+
+                        <tr>
+
+                            <td>{{ row.roll_no }}</td>
+
+                            <td>{{ row.name }}</td>
+
+                            {% for subject in subjects %}
+
+                            <td>
+
+                                {{ row|attr(subject.name) if row|attr(subject.name) != None else "-" }}
+
+                            </td>
+
+                            {% endfor %}
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

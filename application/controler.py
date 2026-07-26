@@ -3,7 +3,7 @@ from flask_login import LoginManager , login_required , current_user, logout_use
 import pandas as pd
 from werkzeug.security import generate_password_hash ,check_password_hash
 
-from sqlalchemy import or_ , Integer,cast
+from sqlalchemy import or_ , Integer,cast ,func
 
 # from app import  --> circular import error
 from flask import current_app as app
@@ -1300,3 +1300,75 @@ def class_list():
     )
 
 
+
+
+
+@app.route("/exam_report", methods=["GET", "POST"])
+@login_required
+def exam_report():
+
+    classes = SchoolClass.query.order_by(SchoolClass.name).all()
+
+    # Get unique exam names
+    exam_names = (
+        db.session.query(Exam.name)
+        .distinct()
+        .order_by(Exam.name)
+        .all()
+    )
+
+    subjects = []
+    results = []
+
+    selected_class = None
+    selected_exam = None
+
+    if request.method == "POST":
+
+        selected_class = request.form.get("class_id")
+        selected_exam = request.form.get("exam_name")
+
+        # Subjects of selected class
+        subjects = Subject.query.filter_by(class_id=selected_class).all()
+
+        columns = [
+            Student.roll_no,
+            User.name
+        ]
+
+        # Dynamic subject columns
+        for subject in subjects:
+
+            columns.append(
+                func.max(Mark.marks_obtained)
+                .filter(Subject.id == subject.id)
+                .label(subject.name)
+            )
+
+        results = (
+            db.session.query(*columns)
+            .join(User, Student.user_id == User.id)
+            .join(Mark, Student.id == Mark.student_id)
+            .join(Exam, Mark.exam_id == Exam.id)
+            .join(Subject, Exam.subject_id == Subject.id)
+            .filter(
+                Student.class_id == selected_class,
+                Exam.name == selected_exam
+            )
+            .group_by(
+                Student.roll_no,
+                User.name
+            )
+            .order_by(Student.roll_no.cast(db.Integer))
+            .all()
+        )
+
+    return render_template(
+        "admin/exam_report.html",
+        classes=classes,
+        exam_names=exam_names,
+        subjects=subjects,
+        results=results,
+        selected_class=selected_class,
+        selected_exam=selected_exam
+    )
