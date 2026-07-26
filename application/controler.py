@@ -1424,3 +1424,82 @@ def print_exam_report():
         subjects=subjects,
         results=results
     )    
+from openpyxl import Workbook
+from flask import send_file
+from io import BytesIO
+from sqlalchemy import func
+
+@app.route("/export_exam_excel")
+@login_required
+def export_exam_excel():
+
+    class_id = request.args.get("class_id")
+    exam_name = request.args.get("exam_name")
+
+    school_class = SchoolClass.query.get_or_404(class_id)
+    subjects = Subject.query.filter_by(class_id=class_id).all()
+
+    columns = [
+        Student.roll_no,
+        User.name
+    ]
+
+    for subject in subjects:
+        columns.append(
+            func.max(Mark.marks_obtained)
+            .filter(Subject.id == subject.id)
+            .label(subject.name)
+        )
+
+    results = (
+        db.session.query(*columns)
+        .join(User, Student.user_id == User.id)
+        .join(Mark, Student.id == Mark.student_id)
+        .join(Exam, Mark.exam_id == Exam.id)
+        .join(Subject, Exam.subject_id == Subject.id)
+        .filter(
+            Student.class_id == class_id,
+            Exam.name == exam_name
+        )
+        .group_by(Student.roll_no, User.name)
+        .order_by(Student.roll_no.cast(db.Integer))
+        .all()
+    )
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = exam_name
+
+    ws.append([
+        f"Class {school_class.name}-{school_class.section}",
+        exam_name
+    ])
+
+    ws.append([])
+
+    headers = ["Roll No", "Student Name"]
+
+    for subject in subjects:
+        headers.append(subject.name)
+
+    ws.append(headers)
+
+    for row in results:
+
+        data = [row.roll_no, row.name]
+
+        for subject in subjects:
+            data.append(getattr(row, subject.name))
+
+        ws.append(data)
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    return send_file(
+        output,
+        download_name=f"{exam_name}-{school_class.name}.xlsx",
+        as_attachment=True,
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )

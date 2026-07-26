@@ -97,6 +97,12 @@ Exam Report
                     exam_name=selected_exam) }}" target="_blank" class="btn btn-success">
                         <i class="bi bi-printer"></i>
                         Print Report
+                    </a> 
+                    <a href="{{ url_for('export_exam_excel',
+                        class_id=selected_class,
+                        exam_name=selected_exam) }}" class="btn btn-success">
+                        <i class="bi bi-file-earmark-excel"></i>
+                        Excel
                     </a>
                     {% endif %}
 
