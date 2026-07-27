@@ -1,0 +1,205 @@
+{% extends "admin/admin_dashboard.html" %}
+
+{% block title %}
+Student Due Fee Report
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+
+                Student Due Fee Report
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <select class="form-select" name="class_id" required>
+
+                            <option value="">Select Class</option>
+
+                            {% for c in classes %}
+
+                            <option value="{{ c.id }}" {% if selected_class==c.id|string %}selected{% endif %}>
+
+                                {{ c.name }} - {{ c.section }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button class="btn btn-primary w-100">
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+            {% if report %}
+
+            <hr>
+
+            {% for student in report %}
+
+            <div class="card mb-4">
+
+                <div class="card-header bg-light">
+
+                    <h5>
+
+                        {{ student.student.roll_no }}
+
+                        -
+
+                        {{ student.student.user.name }}
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered">
+
+                            <thead class="table-dark">
+
+                                <tr>
+
+                                    <th>Fee Type</th>
+
+                                    <th>Total Fee</th>
+
+                                    <th>Paid</th>
+
+                                    <th>Discount</th>
+
+                                    <th>Fine</th>
+
+                                    <th>Due</th>
+
+                                    <th>Status</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for fee in student.details %}
+
+                                <tr>
+
+                                    <td>{{ fee.fee_name }}</td>
+
+                                    <td>{{ fee.amount }}</td>
+
+                                    <td>{{ fee.paid }}</td>
+
+                                    <td>{{ fee.discount }}</td>
+
+                                    <td>{{ fee.fine }}</td>
+
+                                    <td>{{ fee.due }}</td>
+
+                                    <td>
+
+                                        {% if fee.due <=0 %} <span class="badge bg-success">
+
+                                            Paid
+
+                                            </span>
+
+                                            {% elif fee.paid>0 %}
+
+                                            <span class="badge bg-warning">
+
+                                                Partial
+
+                                            </span>
+
+                                            {% else %}
+
+                                            <span class="badge bg-danger">
+
+                                                Due
+
+                                            </span>
+
+                                            {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                            <tfoot>
+
+                                <tr class="table-primary">
+
+                                    <th>Total</th>
+
+                                    <th>{{ student.total_fee }}</th>
+
+                                    <th>{{ student.total_paid }}</th>
+
+                                    <th>{{ student.total_discount }}</th>
+
+                                    <th>{{ student.total_fine }}</th>
+
+                                    <th>{{ student.total_due }}</th>
+
+                                    <th></th>
+
+                                </tr>
+
+                            </tfoot>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

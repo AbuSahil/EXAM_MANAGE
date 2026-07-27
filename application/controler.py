@@ -1503,3 +1503,102 @@ def export_exam_excel():
         as_attachment=True,
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
+
+
+
+@app.route("/student_due_report", methods=["GET", "POST"])
+@login_required
+def student_due_report():
+
+    classes = SchoolClass.query.order_by(SchoolClass.name).all()
+
+    students = []
+    report = []
+
+    selected_class = ""
+
+    if request.method == "POST":
+
+        selected_class = request.form.get("class_id")
+
+        students = (
+            Student.query
+            .filter_by(class_id=selected_class)
+            .join(User)
+            .order_by(Student.roll_no.cast(db.Integer))
+            .all()
+        )
+
+        for student in students:
+
+            fee_types = FeeType.query.filter_by(class_id=student.class_id).all()
+
+            total_fee = 0
+            total_paid = 0
+            total_discount = 0
+            total_fine = 0
+
+            details = []
+
+            for fee in fee_types:
+
+                paid = (
+                    db.session.query(func.sum(FeeCollection.amount))
+                    .filter(
+                        FeeCollection.student_id == student.id,
+                        FeeCollection.fee_type_id == fee.id
+                    )
+                    .scalar()
+                ) or 0
+
+                discount = (
+                    db.session.query(func.sum(FeeCollection.discount))
+                    .filter(
+                        FeeCollection.student_id == student.id,
+                        FeeCollection.fee_type_id == fee.id
+                    )
+                    .scalar()
+                ) or 0
+
+                fine = (
+                    db.session.query(func.sum(FeeCollection.fine))
+                    .filter(
+                        FeeCollection.student_id == student.id,
+                        FeeCollection.fee_type_id == fee.id
+                    )
+                    .scalar()
+                ) or 0
+
+                due = fee.amount - paid - discount + fine
+
+                total_fee += fee.amount
+                total_paid += paid
+                total_discount += discount
+                total_fine += fine
+
+                details.append({
+                    "fee_name": fee.fee_name,
+                    "amount": fee.amount,
+                    "paid": paid,
+                    "discount": discount,
+                    "fine": fine,
+                    "due": due
+                })
+
+            report.append({
+                "student": student,
+                "details": details,
+                "total_fee": total_fee,
+                "total_paid": total_paid,
+                "total_discount": total_discount,
+                "total_fine": total_fine,
+                "total_due": total_fee - total_paid - total_discount + total_fine
+            })
+
+    return render_template(
+        "admin/fees/student_due_report.html",
+        classes=classes,
+        report=report,
+        selected_class=selected_class
+    )
