@@ -24,10 +24,12 @@ def handle_exception(e):
     db.session.rollback()
     app.logger.exception(e)
     return render_template("admin/500.html" , user=current_user), 500
-@app.route('/favicon.ico')
-def favicon():
-    return '', 204
-@app.route("/", methods=["GET", "POST"])
+
+@app.route("/")
+def home():
+     return render_template("landing.html")
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
     try:
         if request.method == "POST":
@@ -46,7 +48,7 @@ def login():
                 session.permanent = True
 
                 if this_user.role == "admin":
-                    return redirect("/admin")
+                    return redirect(url_for('admin'))
 
                 elif this_user.role == "staff":
                     return redirect("/staff")

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bandia Jatiya Vidyalaya</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .navbar {
+            background: #0d6efd;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(13, 110, 253, .75), rgba(13, 110, 253, .75)),
+                url("{{ url_for('static', filename='uploads/school_logo/Picture1.png') }}");
+            background-size: cover;
+            background-position: center;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 55px;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 20px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #0d6efd;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 0, 0, .1);
+            transition: .3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+        .counter {
+            background: #0d6efd;
+            color: white;
+        }
+
+        footer {
+            background: #212529;
+            color: white;
+        }
+
+        .notice {
+            background: #f8f9fa;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+
+            <a class="navbar-brand" href="#">
+                <i class="fa-solid fa-school"></i>
+                Bandia Jatiya Vidyalaya
+            </a>
+
+            <button class="navbar-toggler bg-light" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('home' ) }}">Home</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="#notice">Notice</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+
+                </ul>
+
+                <a href="{{ url_for('login' ) }}" class="btn btn-warning ms-lg-3">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+    </nav>
+
+
+    <section class="hero">
+
+        <div class="container">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-7">
+
+                    <h1>Welcome to<br>Bandia Jatiya Vidyalaya</h1>
+
+                    <p class="mt-4">
+
+                        Empowering students through quality education, discipline,
+                        innovation and technology.
+
+                    </p>
+
+                    <a href="{{ url_for('login' ) }}" class="btn btn-light btn-lg mt-3 me-2">
+
+                        Login
+
+                    </a>
+
+                    <a href="#about" class="btn btn-outline-light btn-lg mt-3">
+
+                        Learn More
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section id="about" class="py-5">
+
+        <div class="container">
+
+            <h2 class="section-title text-center">
+
+                About Our School
+
+            </h2>
+
+            <p class="text-center fs-5">
+
+                Bandia Jatiya Vidyalaya is committed to providing quality education,
+                developing leadership skills and creating responsible citizens through
+                academic excellence and modern technology.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="counter py-5">
+
+        <div class="container">
+
+            <div class="row text-center">
+
+                <div class="col-md-3">
+
+                    <h2>1500+</h2>
+
+                    Students
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <h2>45+</h2>
+
+                    Teachers
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <h2>98%</h2>
+
+                    Result
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <h2>25+</h2>
+
+                    Years
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section id="features" class="py-5">
+
+        <div class="container">
+
+            <h2 class="section-title text-center">
+
+                School Features
+
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <div class="card p-4 text-center">
+
+                        <i class="fa-solid fa-user-graduate fa-3x text-primary"></i>
+
+                        <h4 class="mt-3">
+
+                            Student Portal
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card p-4 text-center">
+
+                        <i class="fa-solid fa-book fa-3x text-success"></i>
+
+                        <h4 class="mt-3">
+
+                            Online Results
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card p-4 text-center">
+
+                        <i class="fa-solid fa-money-bill fa-3x text-warning"></i>
+
+                        <h4 class="mt-3">
+
+                            Fee Management
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card p-4 text-center">
+
+                        <i class="fa-solid fa-calendar-check fa-3x text-danger"></i>
+
+                        <h4 class="mt-3">
+
+                            Attendance
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card p-4 text-center">
+
+                        <i class="fa-solid fa-clipboard-list fa-3x text-info"></i>
+
+                        <h4 class="mt-3">
+
+                            Exam Management
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card p-4 text-center">
+
+                        <i class="fa-solid fa-chalkboard-user fa-3x text-secondary"></i>
+
+                        <h4 class="mt-3">
+
+                            Experienced Teachers
+
+                        </h4>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section id="notice" class="notice py-5">
+
+        <div class="container">
+
+            <h2 class="section-title text-center">
+
+                Latest Notices
+
+            </h2>
+
+            <div class="list-group">
+
+                <a href="#" class="list-group-item">
+
+                    📢 Admission Open for Academic Session 2026-27
+
+                </a>
+
+                <a href="#" class="list-group-item">
+
+                    📢 Half Yearly Examination begins next month
+
+                </a>
+
+                <a href="#" class="list-group-item">
+
+                    📢 Parent Teacher Meeting on Sunday
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section id="contact" class="py-5">
+
+        <div class="container">
+
+            <h2 class="section-title text-center">
+
+                Contact Us
+
+            </h2>
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <p><i class="fa-solid fa-location-dot"></i> Bandia, Assam</p>
+
+                    <p><i class="fa-solid fa-phone"></i> +91 XXXXXXXXXX</p>
+
+                    <p><i class="fa-solid fa-envelope"></i> info@bjv.co.in</p>
+
+                    <p><i class="fa-solid fa-globe"></i> www.bjv.co.in</p>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1786.1952584214962!2d92.05299395644255!3d26.443138195797975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x375b1d1b8d0c7bff%3A0x79a727e814eaa754!2sBandia%20Jatiya%20Vidyalaya!5e0!3m2!1sen!2sin!4v1785148525798!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer class="py-4">
+
+        <div class="container text-center">
+
+            <h5>Bandia Jatiya Vidyalaya</h5>
+
+            <p>
+
+                Learning Today • Leading Tomorrow
+
+            </p>
+
+            <p>
+
+                © 2026 Bandia Jatiya Vidyalaya. All Rights Reserved.
+
+            </p>
+
+        </div>
+
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
