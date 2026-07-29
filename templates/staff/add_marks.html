@@ -64,75 +64,80 @@
 
             </div>
 
-            <form method="POST">
+            <form method="POST" action="{{ url_for('add_marks', exam_id=exam.id) }}">
 
-                <!-- Desktop Table -->
-                <div class="table-responsive d-none d-lg-block">
+                <!-- ================= Desktop Table ================= -->
+                <div class="desktop-form d-none d-lg-block">
 
-                    <table class="table table-bordered table-hover align-middle">
+                    <div class="table-responsive">
 
-                        <thead class="table-dark">
+                        <table class="table table-bordered table-hover align-middle">
 
-                            <tr>
-                                <th>Roll No</th>
-                                <th>Student Name</th>
-                                <th width="150">Marks</th>
-                                <th>Remarks</th>
-                            </tr>
+                            <thead class="table-dark">
 
-                        </thead>
+                                <tr>
+                                    <th width="100">Roll No</th>
+                                    <th>Student Name</th>
+                                    <th width="160">Marks</th>
+                                    <th>Remarks</th>
+                                </tr>
 
-                        <tbody>
+                            </thead>
 
-                            {% for student in students %}
+                            <tbody>
 
-                            {% set mark = marks | selectattr("student_id","equalto",student.id) | first %}
+                                {% for student in students %}
 
-                            <tr>
+                                {% set mark = marks | selectattr("student_id","equalto",student.id) | first %}
 
-                                <td>
-                                    {{ student.roll_no }}
-                                    <input type="hidden" name="student_id" value="{{ student.id }}">
-                                </td>
+                                <tr>
 
-                                <td>{{ student.user.name }}</td>
+                                    <td class="text-center">
 
-                                <td>
+                                        {{ student.roll_no }}
 
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        name="marks"
-                                        min="0"
-                                        max="{{ exam.total_marks }}"
-                                        value="{{ mark.marks_obtained if mark else '' }}"
-                                        oninput="if(this.value>this.max)this.value=this.max;"
-                                        required>
+                                        <input type="hidden" name="student_id" value="{{ student.id }}">
 
-                                </td>
+                                    </td>
 
-                                <td>
+                                    <td>
 
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="remarks"
-                                        value="{{ mark.remarks if mark else '' }}">
+                                        {{ student.user.name }}
 
-                                </td>
+                                    </td>
 
-                            </tr>
+                                    <td>
 
-                            {% endfor %}
+                                        <input type="number" class="form-control" name="marks" min="0"
+                                            max="{{ exam.total_marks }}" step="0.5"
+                                            value="{{ mark.marks_obtained if mark else '' }}"
+                                            oninput="if(this.value>this.max)this.value=this.max;" required>
 
-                        </tbody>
+                                    </td>
 
-                    </table>
+                                    <td>
+
+                                        <input type="text" class="form-control" name="remarks"
+                                            value="{{ mark.remarks if mark else '' }}" placeholder="Remarks">
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 
-                <!-- Mobile Cards -->
-                <div class="d-lg-none">
+                <!-- ===== Part 2 starts from here ===== -->
+                <!-- ================= Mobile Cards ================= -->
+
+                <div class="mobile-form d-lg-none">
 
                     {% for student in students %}
 
@@ -159,15 +164,10 @@
                                     Marks
                                 </label>
 
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    name="marks"
-                                    min="0"
-                                    max="{{ exam.total_marks }}"
+                                <input type="number" class="form-control" name="marks" min="0"
+                                    max="{{ exam.total_marks }}" step="0.5"
                                     value="{{ mark.marks_obtained if mark else '' }}"
-                                    oninput="if(this.value>this.max)this.value=this.max;"
-                                    required>
+                                    oninput="if(this.value>this.max)this.value=this.max;" required>
 
                             </div>
 
@@ -177,11 +177,8 @@
                                     Remarks
                                 </label>
 
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="remarks"
-                                    value="{{ mark.remarks if mark else '' }}">
+                                <input type="text" class="form-control" name="remarks"
+                                    value="{{ mark.remarks if mark else '' }}" placeholder="Remarks">
 
                             </div>
 
@@ -193,24 +190,19 @@
 
                 </div>
 
+                <!-- Buttons -->
+
                 <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
 
-                    <a href="/manage_exams" class="btn btn-primary">
+                    <a href="{{ url_for('manage_exams') }}" class="btn btn-primary">
                         <i class="bi bi-arrow-left"></i>
                         Back
                     </a>
 
-                    
-
                     <button type="submit" class="btn btn-success">
-
                         <i class="bi bi-check-circle"></i>
-
                         Save Marks
-
                     </button>
-                    
-                
 
                 </div>
 
@@ -221,5 +213,32 @@
     </div>
 
 </div>
+
+<!-- Disable hidden layout inputs -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function toggleForms() {
+
+            const desktop = window.innerWidth >= 992;
+
+            document.querySelectorAll(".desktop-form input, .desktop-form select, .desktop-form textarea")
+                .forEach(function (el) {
+                    el.disabled = !desktop;
+                });
+
+            document.querySelectorAll(".mobile-form input, .mobile-form select, .mobile-form textarea")
+                .forEach(function (el) {
+                    el.disabled = desktop;
+                });
+
+        }
+
+        toggleForms();
+
+        window.addEventListener("resize", toggleForms);
+
+    });
+</script>
 
 {% endblock %}

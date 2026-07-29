@@ -554,8 +554,10 @@ def manage_exams():
 @app.route("/add_marks/<int:exam_id>", methods=["GET", "POST"])
 @login_required
 def add_marks(exam_id):
+    print("Method:", request.method)
+    print("Route reached")
     exam = Exam.query.get_or_404(exam_id)
-
+    
     if current_user.role is None or current_user.role != "staff":
         flash("Only staff can access this page.", "danger")
         return redirect(url_for("login"))
@@ -575,6 +577,9 @@ def add_marks(exam_id):
         student_ids = request.form.getlist("student_id")
         marks = request.form.getlist("marks")
         remarks = request.form.getlist("remarks")
+        print(student_ids)
+        print(marks)
+        print(remarks)
 
         try:
 
