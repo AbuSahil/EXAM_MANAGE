@@ -19,9 +19,9 @@ def create_app():
 
     app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=8)
     
-    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://schooladmin:BJV2026@localhost:5432/school_management"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://schooladmin:BJV2026@localhost:5432/school_management"
     # app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:Alpana2030%40%23@localhost:5432/BJV"
-    # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite3" 
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite3" 
     
     db.init_app(app)
     # init_master_db(app)
